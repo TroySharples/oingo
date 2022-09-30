@@ -1,0 +1,19 @@
+{
+	"name": "Debian",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": { "VARIANT": "bullseye" }
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"twxs.cmake",
+				"ms-vscode.cpptools",
+				"ms-vscode.cpptools-extension-pack",
+				"josetr.cmake-language-support-vscode",
+				"ms-vscode.cmake-tools",
+				"GitHub.vscode-pull-request-github"
+			]
+		}
+	}
+}
