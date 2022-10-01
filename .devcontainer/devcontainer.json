@@ -13,7 +13,9 @@
 				"ms-vscode.cmake-tools",
 				"cschlosser.doxdocgen",
 				"GitHub.vscode-pull-request-github",
-				"usernamehw.todo-md"
+				"usernamehw.todo-md",
+				"DavidAnson.vscode-markdownlint",
+				"ms-vscode.makefile-tools"
 			]
 		}
 	}
