@@ -12,7 +12,8 @@
 				"ms-vscode.cpptools-extension-pack",
 				"josetr.cmake-language-support-vscode",
 				"ms-vscode.cmake-tools",
-				"GitHub.vscode-pull-request-github"
+				"GitHub.vscode-pull-request-github",
+				"cschlosser.doxdocgen"
 			]
 		}
 	}
