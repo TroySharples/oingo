@@ -84,25 +84,25 @@ constexpr vector<T, S> operator/(const vector<T, S>& v, const auto& t)
 template <typename T, std::size_t S>
 constexpr vector<T, S>& vector<T, S>::operator+=(const vector<T, S>& t) noexcept
 {
-    return (*this)+t;
+    return (*this) = (*this)+t;
 }
 
 template <typename T, std::size_t S>
 constexpr vector<T, S>& vector<T, S>::operator-=(const vector<T, S>& t) noexcept
 {
-    return (*this)-t;
+    return (*this) = (*this)-t;
 }
 
 template <typename T, std::size_t S>
 constexpr vector<T, S>& vector<T, S>::operator*=(const auto& t) noexcept
 {
-    return (*this)*t;
+    return (*this) = (*this)*t;
 }
 
 template <typename T, std::size_t S>
 constexpr vector<T, S>& vector<T, S>::operator/=(const auto& t) noexcept
 {
-    return (*this)/t;
+    return (*this) = (*this)/t;
 }
 
 // Dot, cross, and triple product

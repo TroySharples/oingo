@@ -19,11 +19,10 @@ struct matrix : std::array<T, M*N>
     // Arithmetic overloads
     constexpr const matrix& operator+() const     noexcept { return *this; }
     constexpr matrix operator-() const            noexcept { return T(- 1) * (*this); }
-    constexpr matrix& operator*=(const T& t)      noexcept;
-    constexpr matrix& operator/=(const T& t)      noexcept;
     constexpr matrix& operator+=(const matrix& A) noexcept;
     constexpr matrix& operator-=(const matrix& A) noexcept;
-    constexpr matrix& operator*=(const matrix& A) noexcept;
+    constexpr matrix& operator*=(const auto& t)   noexcept;
+    constexpr matrix& operator/=(const auto& t)   noexcept;
 };
 
 // Non-member arithmetic overloads
@@ -102,23 +101,23 @@ constexpr matrix<T, M, N>& matrix<T, M, N>::operator-=(const matrix<T, M, N>& t)
 }
 
 template <typename T, std::size_t M, std::size_t N>
-constexpr matrix<T, M, N>& matrix::operator*=(const auto& t) noexcept
+constexpr matrix<T, M, N>& matrix<T, M, N>::operator*=(const auto& t) noexcept
 {
-    return (*this)*t;
+    return (*this) = (*this)*t;
 }
 
 template <typename T, std::size_t M, std::size_t N>
-constexpr matrix<T, M, N>& matrix::operator/=(const auto& t) noexcept
+constexpr matrix<T, M, N>& matrix<T, M, N>::operator/=(const auto& t) noexcept
 {
-    return (*this)/t
+    return (*this) = (*this)/t;
 }
 
 /**
  * @brief Generates the rotation matrix from the Euler angles
  */
 template <typename T>
-requires std::floating_point<_T>
-matrix<_T, 3, 3> rotation(_T a, _T b, _T c)
+requires std::floating_point<T>
+matrix<T, 3, 3> rotation(T a, T b, T c)
 {
     using namespace std;
     return { cos(b)*cos(c), sin(a)*sin(b)*cos(c) - cos(a)*sin(c), cos(a)*sin(b)*cos(c) + sin(a)*sin(c),
@@ -131,7 +130,7 @@ matrix<_T, 3, 3> rotation(_T a, _T b, _T c)
 template <typename T, std::size_t M, std::size_t N>
 std::ostream& operator<<(std::ostream& os, const matrix<T, M, N>& A)
 {
-    for (const auto& i : v)
+    for (const auto& i : A)
         if constexpr (std::is_integral<T>::value)
             os << static_cast<int>(i) << ' ';
         else
