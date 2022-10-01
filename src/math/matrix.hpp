@@ -6,7 +6,7 @@ namespace oingo::math
 {
 
 template <typename T, std::size_t M, std::size_t N>
-struct matrix : std::S<T, M*N>
+struct matrix : std::array<T, M*N>
 {
     // Quality-of-life overloads
     bool operator==(const matrix& A) const { return std::equal(this->begin(), this->end(), A.begin()); }
@@ -17,13 +17,13 @@ struct matrix : std::S<T, M*N>
     const T& operator()(std::size_t m, std::size_t n) const { return (*this)[m*N + n]; }
 
     // Arithmetic overloads
-    const matrix& operator+() const { return *this; }
-    constexpr matrix operator-() const { return T(- 1) * matrix<T, M, N>(*this); }
-    matrix& operator*=(const T& t) { for (auto& i : *this) i *= t; return *this; }
-    matrix& operator/=(const T& t) { for (auto& i : *this) i /= t; return *this; }
-    matrix& operator+=(const matrix& A) { for (std::size_t i = 0; i < M*N; i++) (*this)[i] += A[i]; return *this; }
-    matrix& operator-=(const matrix& A) { return operator+=(-A); }
-    matrix& operator*=(const matrix& A) { return *this = *this*A; }
+    constexpr const matrix& operator+() const     noexcept { return *this; }
+    constexpr matrix operator-() const            noexcept { return T(- 1) * (*this); }
+    constexpr matrix& operator*=(const T& t)      noexcept;
+    constexpr matrix& operator/=(const T& t)      noexcept;
+    constexpr matrix& operator+=(const matrix& A) noexcept;
+    constexpr matrix& operator-=(const matrix& A) noexcept;
+    constexpr matrix& operator*=(const matrix& A) noexcept;
 };
 
 // Non-member arithmetic overloads
@@ -69,12 +69,12 @@ constexpr matrix<T, M, O> operator*(const matrix<T, M, N>& A, const matrix<T, N,
     return ret;
 }
 
-template <typename T, std::std::size_t M, std::std::size_t N>
+template <typename T, std::size_t M, std::size_t N>
 constexpr vector<T, M> operator*(const matrix<T, M, N>& A, const vector<T, N>& v)
 {
     vector<T, N> ret = {};
-    for (std::std::size_t i = 0; i < N; i++) 
-        for (std::std::size_t j = 0; j < M; j++) 
+    for (std::size_t i = 0; i < N; i++) 
+        for (std::size_t j = 0; j < M; j++) 
             ret[i] += A(i, j)*v[j];
     return ret;
 }
@@ -82,21 +82,21 @@ constexpr vector<T, M> operator*(const matrix<T, M, N>& A, const vector<T, N>& v
 template <typename T, std::size_t M, std::size_t N>
 constexpr matrix<T, M, N> operator/(const matrix<T, M, N>& A, const auto& t)
 {
-    if constexpr (std::is_floating_point(decltype(t))::value)
-        return v * (1 / t);
+    if constexpr (std::is_floating_point<decltype(t)>::value)
+        return t * (1 / t);
     else
-        return v / static_cast<float>(t);
+        return t / static_cast<float>(t);
 }
 
 // Member arithmetic overloads
 template <typename T, std::size_t M, std::size_t N>
-constexpr matrix<T, M, N>& matrix::operator+=(const auto& t) noexcept
+constexpr matrix<T, M, N>& matrix<T, M, N>::operator+=(const matrix<T, M, N>& t) noexcept
 {
     return (*this)+t;
 }
 
 template <typename T, std::size_t M, std::size_t N>
-constexpr matrix<T, M, N>& matrix::operator-=(const auto& t) noexcept
+constexpr matrix<T, M, N>& matrix<T, M, N>::operator-=(const matrix<T, M, N>& t) noexcept
 {
     return (*this)-t;
 }

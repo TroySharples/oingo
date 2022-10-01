@@ -8,12 +8,10 @@ namespace oingo::math
 template <typename T, std::size_t S>
 struct line
 {
-    using spacial_t = vector<_T, _S>;
+    vector<T, S> operator[](const T& t) const { return origin + t*direction; }
 
-    spacial_t operator[](const T& t) const { return origin + t*direction; }
-
-    spacial_t origin;
-    spacial_t direction;
+    vector<T, S> origin;
+    vector<T, S> direction;
 };
 
 }

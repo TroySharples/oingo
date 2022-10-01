@@ -16,7 +16,7 @@ namespace oingo::math
  * @tparam S The dimension of the vector
  */
 template <typename T, std::size_t S>
-struct vector : std::S<T, S>
+struct vector : std::array<T, S>
 {
     // Equivalence overloads
     bool operator==(const vector& v) const noexcept { return std::equal(this->begin(), this->end(), v.begin()); }
@@ -24,7 +24,7 @@ struct vector : std::S<T, S>
 
     // General arithmetic overloads
     constexpr const vector& operator+() const noexcept { return *this; }
-    constexpr vector operator-() const noexcept { return T(- 1) * vector<T, S>(*this); }
+    constexpr vector operator-() const noexcept { return T(- 1) * (*this); }
     constexpr vector& operator+=(const vector& v) noexcept;
     constexpr vector& operator-=(const vector& v) noexcept;
     constexpr vector& operator*=(const auto& t) noexcept;
@@ -57,7 +57,7 @@ template <typename T, std::size_t S>
 constexpr vector<T, S> operator*(const vector<T, S>& v, const auto& t)
 {
     vector<T, S> ret;
-    for (std::size_t i)
+    for (std::size_t i = 0; i < S; i++)
         if constexpr (std::is_integral<T>::value)
             ret[i] = std::round(v[i] * t);
         else
@@ -74,7 +74,7 @@ constexpr vector<T, S> operator*(const auto& t, const vector<T, S>& v)
 template <typename T, std::size_t S>
 constexpr vector<T, S> operator/(const vector<T, S>& v, const auto& t)
 {
-    if constexpr (std::is_floating_point(decltype(t))::value)
+    if constexpr (std::is_floating_point<decltype(t)>::value)
         return v * (1 / t);
     else
         return v / static_cast<float>(t);
@@ -82,27 +82,27 @@ constexpr vector<T, S> operator/(const vector<T, S>& v, const auto& t)
 
 // Member arithmetic overloads
 template <typename T, std::size_t S>
-constexpr vector<T, S>& vector::operator+=(const auto& t) noexcept
+constexpr vector<T, S>& vector<T, S>::operator+=(const vector<T, S>& t) noexcept
 {
     return (*this)+t;
 }
 
 template <typename T, std::size_t S>
-constexpr vector<T, S>& vector::operator-=(const auto& t) noexcept
+constexpr vector<T, S>& vector<T, S>::operator-=(const vector<T, S>& t) noexcept
 {
     return (*this)-t;
 }
 
 template <typename T, std::size_t S>
-constexpr vector<T, S>& vector::operator*=(const auto& t) noexcept
+constexpr vector<T, S>& vector<T, S>::operator*=(const auto& t) noexcept
 {
     return (*this)*t;
 }
 
 template <typename T, std::size_t S>
-constexpr vector<T, S>& vector::operator/=(const auto& t) noexcept
+constexpr vector<T, S>& vector<T, S>::operator/=(const auto& t) noexcept
 {
-    return (*this)/t
+    return (*this)/t;
 }
 
 // Dot, cross, and triple product
@@ -115,7 +115,7 @@ constexpr T dot_product(const vector<T, S>& v, const vector<T, S>& w)
 }
 
 template <typename T, std::size_t S>
-requires { S == 3 }
+requires (S == 3)
 constexpr vector<T, S> cross_product(const vector<T, S>& v, const vector<T, S>& w)
 {
     return { v[1] * w[2] - v[2] * w[1], v[2] * w[0] - v[0] * w[2], v[0] * w[1] - v[1] * w[0] };
@@ -124,7 +124,7 @@ constexpr vector<T, S> cross_product(const vector<T, S>& v, const vector<T, S>& 
 template <typename T, std::size_t S>
 constexpr T scalar_triple_product(const vector<T, S>& v, const vector<T, S>& w, const vector<T, S>& u)
 {
-    return oingo::dot_product(v, cross_product(w, u));
+    return dot_product(v, cross_product(w, u));
 }
 
 /**
@@ -143,7 +143,7 @@ typename T::value_type square_length(const T& v) noexcept
  * @brief Calculates the Euclidean length of an STL container of floating point types
  */
 template <typename T>
-requires std::floating_point<T::value_type>
+requires std::floating_point<typename T::value_type>
 typename T::value_type length(const T& v) noexcept
 {
     return std::sqrt(square_length(v));
@@ -153,7 +153,7 @@ typename T::value_type length(const T& v) noexcept
  * @brief Calculates the inverse square Euclidean length of an STL container of floating point types
  */
 template <typename T>
-requires std::floating_point<T::value_type>
+requires std::floating_point<typename T::value_type>
 typename T::value_type inverse_square_length(const T& v) noexcept
 {
     return 1/square_length(v);
@@ -165,8 +165,8 @@ typename T::value_type inverse_square_length(const T& v) noexcept
  * this one here.
  */
 template <typename T>
-requires std::floating_point<T::value_type>
-typename T::value_type length(const T& v) noexcept
+requires std::floating_point<typename T::value_type>
+typename T::value_type inverse_length(const T& v) noexcept
 {
     return 1/square_length(v);
 }

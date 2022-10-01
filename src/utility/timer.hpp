@@ -7,6 +7,9 @@
 #include <atomic>
 #include <memory>
 
+namespace oingo::utility
+{
+
 class life_timer
 {
 public:
@@ -36,3 +39,5 @@ private:
 private:
     void add_time(double time);
 };
+
+}

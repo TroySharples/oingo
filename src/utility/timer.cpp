@@ -4,6 +4,9 @@
 
 #include <iostream>
 
+namespace oingo::utility
+{
+
 static void default_callback(std::string label, double time)
 {
     PRINT_TIME("Life timer \"" << label << "\" - " << time << " ms");
@@ -46,4 +49,6 @@ std::unique_ptr<life_timer> total_timer::add_timer()
 void total_timer::add_time(double time)
 {
     _total_time += time;
+}
+
 }
