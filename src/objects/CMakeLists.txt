@@ -1,4 +1,4 @@
-add_library(oingo-objects STATIC sphere.cpp sphere.cpp object.hpp)
+add_library(oingo-objects STATIC sphere.cpp sphere.cpp object.hpp material.hpp)
 
 target_include_directories(oingo-objects PRIVATE ${PROJECT_SOURCE_DIR}/src/objects)
 

@@ -1,8 +1,7 @@
 {
 	"name": "Debian",
 	"build": {
-		"dockerfile": "Dockerfile",
-		"args": { "VARIANT": "bullseye" }
+		"dockerfile": "Dockerfile"
 	},
 	"customizations": {
 		"vscode": {
