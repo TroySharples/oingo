@@ -6,13 +6,14 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"twxs.cmake",
+				"slevesque.vscode-3dviewer",
 				"ms-vscode.cpptools",
 				"ms-vscode.cpptools-extension-pack",
-				"josetr.cmake-language-support-vscode",
+				"twxs.cmake",
 				"ms-vscode.cmake-tools",
+				"cschlosser.doxdocgen",
 				"GitHub.vscode-pull-request-github",
-				"cschlosser.doxdocgen"
+				"usernamehw.todo-md"
 			]
 		}
 	}
