@@ -7,7 +7,7 @@
 namespace oingo::objects
 {
 
-struct
+struct material
 {
     // Emissivness
     colour_t ke;
@@ -23,6 +23,13 @@ struct
     std::optional<colour_t> kr;
     float shininess;
     float index;
+};
+
+struct intersection
+{
+    material mat;
+    spacial_t position;
+    spacial_t normal;
 };
 
 }
