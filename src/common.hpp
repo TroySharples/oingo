@@ -43,7 +43,7 @@ constexpr rgb_t<T> to_rgb(const colour_t& colour)
 {
     rgb_t<T> ret;
     for (std::size_t i = 0; i < 3; i++)
-        ret[i] = std::round(std::max(colour[i], 1.0f) * std::numeric_limits<T>::max());
+        ret[i] = std::round(std::min(std::abs(colour[i]), 1.0f) * std::numeric_limits<T>::max());
     return ret;
 }
 

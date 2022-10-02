@@ -8,7 +8,7 @@
 
 using namespace oingo;
 
-static constexpr const char* TMP_DIR = "/tmp";
+static constexpr const char* TMP_DIR = "/tmp/";
 
 static std::string make_output_name()
 {
@@ -42,7 +42,8 @@ int main()
     
 
     // Hacky convert any PPMs to PNGs. A much nicer way of doing this would be to use libpng
-    std::system(("convert " + tmp_path + ".ppm " + tmp_path + ".png").c_str());
+    if (std::system(("convert " + tmp_path + ".ppm " + tmp_path + ".png").c_str()) != 0)
+        throw std::runtime_error("Could not convert file to PPM");
     std::remove((tmp_path + ".ppm").c_str());
 
     // Output the PPM file to stdout

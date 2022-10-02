@@ -9,8 +9,8 @@ void simple_sampler::render(const scene::scene& s, const film& f, std::ostream& 
 {
     os << "P3\n" << f.horizontal_pixels << " " << f.vertical_pixels << '\n' << static_cast<int>(std::numeric_limits<rgb_t::value_type>::max()) << '\n';
 
-    for (std::size_t i = 0; i < f.horizontal_pixels; i++)
-        for (std::size_t j = 0; j < f.vertical_pixels; j++)
+    for (std::size_t j = 0; j < f.vertical_pixels; j++)
+        for (std::size_t i = 0; i < f.horizontal_pixels; i++)
         {
             const ray_t ray = s.cam->generate_ray(f, i, j);
 

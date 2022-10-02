@@ -8,8 +8,8 @@ ray_t digital::generate_ray(const film& f, std::size_t hori, std::size_t vert)
     if (hori >= f.horizontal_pixels || vert >= f.vertical_pixels)
         throw std::runtime_error("Invalid pixel positon");
 
-    const spacial_t aspect = (1 - (hori + 1)/static_cast<float_t>(f.horizontal_pixels)) * _leftdir
-                           + (1 - (vert + 1)/static_cast<float_t>(f.vertical_pixels))   * _updir;
+    const spacial_t aspect = (0.5 - static_cast<float_t>(hori + 1)/f.horizontal_pixels) * _leftdir
+                           + (0.5 - static_cast<float_t>(vert + 1)/f.vertical_pixels)   * _updir;
     return { .origin = position, .direction = _viewdir + fov * aspect };
 }
 
