@@ -24,8 +24,10 @@ int main()
 
     std::unique_ptr<objects::sphere> obj = std::make_unique<objects::sphere>();
     obj->translate({ 5, 0, 0 });
-    obj->mat.ke = { 1, 1, 0 };
+    obj->mat.ke = { 0.8, 0.8, 0 };
     s.objects.emplace_back(std::move(obj));
+
+    s.ambient_lights.push_back({ .colour = { 0, 0.1, 0.2 } });
 
     film f(1920, 1080);
 
