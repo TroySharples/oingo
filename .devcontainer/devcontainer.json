@@ -15,7 +15,9 @@
 				"GitHub.vscode-pull-request-github",
 				"usernamehw.todo-md",
 				"DavidAnson.vscode-markdownlint",
-				"ms-vscode.makefile-tools"
+				"ms-vscode.makefile-tools",
+				"notskm.clang-tidy",
+				"ngtystr.ppm-pgm-viewer-for-vscode"
 			]
 		}
 	}

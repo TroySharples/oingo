@@ -2,10 +2,10 @@
 
 #include "object.hpp"
 
-namespace oingo::scene
+namespace oingo::objects
 {
 
-class sphere : public objects
+class sphere : public object
 {
 public:
     virtual ~sphere() = default;

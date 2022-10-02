@@ -29,9 +29,6 @@ struct vector : std::array<T, S>
     constexpr vector& operator-=(const vector& v) noexcept;
     constexpr vector& operator*=(const auto& t) noexcept;
     constexpr vector& operator/=(const auto& t) noexcept;
-
-    // Normalises the vector (we need to be a vector of floating points for this to be defined)
-    vector& normalise();
 };
 
 // Non-member arithmetic overloads
@@ -170,6 +167,15 @@ typename T::value_type inverse_length(const T& v) noexcept
 {
     return 1/square_length(v);
 }
+
+/**
+ * @brief Normalises the vector
+ */
+auto normalise(const auto& v)
+{
+    return v * inverse_length(v);
+}
+
 
 // Ostream overload
 template <typename T, std::size_t S>
