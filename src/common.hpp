@@ -37,6 +37,9 @@ template <typename T = std::uint8_t>
 requires std::same_as<T, std::uint8_t> || std::same_as<T, std::uint16_t>
 using rgb_t = math::vector<T, 3>;
 
+using rgb8_t  = rgb_t<std::uint8_t>;
+using rgb16_t = rgb_t<std::uint16_t>;
+
 // Converts a floating point colour to its corresponding RGB value. Floating point values over 1 are truncated
 template <typename T = std::uint8_t>
 constexpr rgb_t<T> to_rgb(const colour_t& colour)

@@ -11,7 +11,7 @@ ray_t digital::generate_ray(const film& f, std::size_t hori, std::size_t vert)
     const float_t aspect_ratio = static_cast<float>(f.horizontal_pixels)/f.vertical_pixels;
     const spacial_t view = aspect_ratio * (0.5 - static_cast<float_t>(hori + 1)/f.horizontal_pixels) * _leftdir
                                         + (0.5 - static_cast<float_t>(vert + 1)/f.vertical_pixels)   * _updir;
-    return { .origin = position, .direction = _viewdir + fov * view };
+    return { .origin = position, .direction = math::normalise(_viewdir + fov * view) };
 }
 
 void digital::set_viewdir(const spacial_t& viewdir)
