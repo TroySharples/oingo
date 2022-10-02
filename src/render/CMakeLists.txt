@@ -1,0 +1,1 @@
+add_library(oingo-render STATIC sampler.cpp sampler.hpp renderer.hpp)

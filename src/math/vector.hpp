@@ -133,7 +133,7 @@ constexpr T scalar_triple_product(const vector<T, S>& v, const vector<T, S>& w, 
 template <typename T>
 typename T::value_type square_length(const T& v) noexcept
 {
-    T ret = 0;
+    typename T::value_type ret = 0;
     for (const auto& i : v)
         ret += i*i;
     return ret;

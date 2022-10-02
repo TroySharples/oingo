@@ -3,6 +3,8 @@
 #include "math/line.hpp"
 #include "math/matrix.hpp"
 
+#include <limits>
+
 namespace oingo
 {
 
@@ -12,6 +14,8 @@ using float_t = double;
 #else
 using float_t = float;
 #endif
+
+constexpr float_t epsilon = std::numeric_limits<float_t>::epsilon();
 
 // Some useful geometric typedefs 
 using ray_t       = math::line<float_t, 3>;
