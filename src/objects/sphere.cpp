@@ -17,6 +17,7 @@ bool sphere::hit(const ray_t& ray) const
 bool sphere::hit(const ray_t& ray, intersection& intersec) const
 {
     // Will fill out the ray structure eventually
+    intersec.mat = mat;
     return hit(ray);
 }
 

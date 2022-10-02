@@ -20,11 +20,11 @@ int main()
 {
     scene::scene s;
 
-    std::unique_ptr<cameras::digital> c = std::make_unique<cameras::digital>();
-    s.cam = std::move(c);
+    s.cam = std::make_unique<cameras::digital>();
 
     std::unique_ptr<objects::sphere> obj = std::make_unique<objects::sphere>();
     obj->translate({ 5, 0, 0 });
+    obj->mat.ke = { 1, 1, 0 };
     s.objects.emplace_back(std::move(obj));
 
     film f(1920, 1080);
@@ -38,8 +38,7 @@ int main()
     {
         std::ofstream os(tmp_path + ".ppm");
         r.render(s, f, os);
-    }
-    
+    }    
 
     // Hacky convert any PPMs to PNGs. A much nicer way of doing this would be to use libpng
     if (std::system(("convert " + tmp_path + ".ppm " + tmp_path + ".png").c_str()) != 0)

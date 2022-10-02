@@ -253,3 +253,4 @@ build/
 
 # CMake build
 **/build
+renders/output.png
