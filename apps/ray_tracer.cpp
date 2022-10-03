@@ -1,23 +1,28 @@
 #include "render/simple_sampler.hpp"
 #include "cameras/digital.hpp"
 #include "objects/sphere.hpp"
+#include "options.hpp"
+#include "ppm.hpp"
 
 #include <chrono>
 #include <fstream>
+#include <filesystem>
 #include <iostream>
 
 using namespace oingo;
 
-static constexpr const char* TMP_PREFIX = "/tmp/.";
-
-static std::string make_output_name()
+static std::string make_tmp_name()
 {
-    // Our output PPM file is just the unix time for now
-    return std::to_string(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+    // Our temporary PPM file is just the unix time for now
+    static constexpr const char* TMP_PREFIX = "/tmp/.";
+    return TMP_PREFIX + std::to_string(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 }
 
-int main()
+int main(int argc, char** argv)
 {
+    // Parse options
+    options opt = parse_options(argc, argv);
+
     scene::scene s;
 
     // Camera
@@ -29,14 +34,14 @@ int main()
     auto obj = std::make_unique<objects::sphere>();
     obj->translate({ 5, 0, 0 });
     obj->mat.ke = { 0.8, 0.8, 0 };
-    // s.objects.emplace_back(std::move(obj));
+    s.objects.emplace_back(std::move(obj));
 
     // Lighting
     s.ambient_lights.push_back({ 0, 0.1, 0.2 });
-    // s.directional_lights.push_back({ 
-    //     .colour    = { 0.3, 0.6, 0.1 },
-    //     .direction = math::normalise(spacial_t{ 1, 0.5, 0.5 })
-    // });
+    s.directional_lights.push_back({ 
+        .colour    = { 0.3, 0.6, 0.1 },
+        .direction = math::normalise(spacial_t{ 1, 0.5, 0.5 })
+    });
     s.point_lights.push_back({
         .colour                     = { 1, 1, 1 },
         .position                   = { 3, -1, 0},
@@ -46,29 +51,31 @@ int main()
     });
 
     // Film
-    film f(1920, 1080);
-
-    // We initially write the file to PPM format in a temporary directory
-    const auto tmp_name = TMP_PREFIX + make_output_name();
+    film f(opt.horizonal_pixels, opt.vertical_pixels);
 
     // Render the image in PPM format
+    const auto ppm_file = make_tmp_name() + ".ppm";
     {
-        std::ofstream os(tmp_name + ".ppm");
+        std::ofstream os(ppm_file);
         render::simple_sampler r;   
         r.render(s, f, os);
     }    
 
-    // Hacky convert any PPMs to PNGs. A much nicer way of doing this would be to use libpng
-    if (std::system(("convert " + tmp_name + ".ppm " + tmp_name + ".png").c_str()) != 0)
-        throw std::runtime_error("Could not convert file to PPM");
-    std::remove((tmp_name + ".ppm").c_str());
+    // Converts to PNG format if necessaary
+    const auto formatted_file = opt.format == options::format_t::ppm ? ppm_file : ppm_to_png(ppm_file); 
 
-    // Output the PPM file to stdout and delete the temporary PNG
+    if (opt.output_file)
     {
-        std::ifstream is(tmp_name + ".png");
-        std::cout << is.rdbuf();
+        if (std::system(("mv " + formatted_file + ' ' + opt.output_file.value()).c_str()) != 0)
+            throw std::runtime_error("Unable to move file");
     }
-    std::remove((tmp_name + ".png").c_str());
+    else
+    {
+        // Output the PPM file to stdout and delete the temporary PNG
+        std::ifstream is(formatted_file);
+        std::cout << is.rdbuf();
+        std::remove(formatted_file.c_str());
+    }
 
     return EXIT_SUCCESS;
 }

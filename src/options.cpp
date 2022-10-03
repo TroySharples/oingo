@@ -1,0 +1,63 @@
+#include "options.hpp"
+
+#include <cstring>
+#include <stdexcept>
+
+#include <unistd.h>
+
+namespace oingo
+{
+
+options parse_options(int argc, char** argv)
+{
+    options ret;
+
+    for (int c; (c = getopt(argc, argv, "f:r:o:")) != -1; )
+    {
+        switch (c)
+        {
+            // Output file format
+            case 'f':
+            {
+                if (strcmp(optarg, "png") == 0)
+                    ret.format = options::format_t::png;
+                else if (strcmp(optarg, "ppm") == 0)
+                    ret.format = options::format_t::ppm;
+                else
+                    throw std::runtime_error("Invalid file format: " + std::string(optarg));
+                break;
+            }
+            // Resolution
+            case 'r':
+            {
+                const std::string resolution = std::string(optarg);
+                const std::size_t xpos = resolution.find('x');
+                ret.horizonal_pixels = std::stoi(resolution.substr(0, xpos));
+                ret.vertical_pixels  = std::stoi(resolution.substr(xpos + 1, resolution.length()));
+                break;
+            }
+            // Output file name
+            case 'o':
+            {
+                ret.output_file = optarg;
+                break;
+            }
+            // Unknown
+            case '?':
+            {
+                if (optopt == 'f' || optopt == 'r' || optopt == 'o')
+                    throw std::runtime_error("Option requires an argument");
+                else
+                    throw std::runtime_error("Unknown option");
+                break;
+            }
+            default:
+                throw std::runtime_error("Could not parse commandline options");   
+
+        }
+    }
+
+    return ret;
+}
+
+}

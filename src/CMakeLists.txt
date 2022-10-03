@@ -7,6 +7,14 @@ add_library(oingo-film STATIC film.cpp film.hpp)
 target_link_libraries(oingo-film PUBLIC Oingo::Math)
 add_library(Oingo::Film ALIAS oingo-film)
 
+add_library(oingo-ppm STATIC ppm.cpp ppm.hpp)
+target_link_libraries(oingo-ppm PUBLIC Oingo::Math)
+add_library(Oingo::PPM ALIAS oingo-ppm)
+
+add_library(oingo-options STATIC options.cpp options.hpp)
+target_link_libraries(oingo-options PUBLIC Oingo::Math)
+add_library(Oingo::Options ALIAS oingo-options)
+
 add_subdirectory(math)
 add_subdirectory(objects)
 add_subdirectory(scene)
