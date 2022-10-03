@@ -14,9 +14,11 @@ namespace oingo::scene
         colour_t colour;
         spacial_t position;
 
-        float constant_attenuation_coef;
-        float linear_attenuation_coef;
-        float quadratic_attenuation_coef;
+        float constant_attenuation_coef  = 0;
+        float linear_attenuation_coef    = 0;
+        float quadratic_attenuation_coef = 1;
+
+        float attenuate(float distance) const { return constant_attenuation_coef + distance * (linear_attenuation_coef + quadratic_attenuation_coef * distance); }
     };
 
     struct directional_light

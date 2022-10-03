@@ -29,13 +29,20 @@ int main()
     auto obj = std::make_unique<objects::sphere>();
     obj->translate({ 5, 0, 0 });
     obj->mat.ke = { 0.8, 0.8, 0 };
-    s.objects.emplace_back(std::move(obj));
+    // s.objects.emplace_back(std::move(obj));
 
     // Lighting
     s.ambient_lights.push_back({ 0, 0.1, 0.2 });
-    s.directional_lights.push_back({ 
-        .colour    = { 0.3, 0.6, 0.1 },
-        .direction = math::normalise(spacial_t{ 1, 0.5, 0.5 })
+    // s.directional_lights.push_back({ 
+    //     .colour    = { 0.3, 0.6, 0.1 },
+    //     .direction = math::normalise(spacial_t{ 1, 0.5, 0.5 })
+    // });
+    s.point_lights.push_back({
+        .colour                     = { 1, 1, 1 },
+        .position                   = { 3, -1, 0},
+        .constant_attenuation_coef  = 1,
+        .linear_attenuation_coef    = 1,
+        .quadratic_attenuation_coef = 0,
     });
 
     // Film

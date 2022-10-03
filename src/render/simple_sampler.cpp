@@ -20,17 +20,51 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
         const float_t alignment = math::dot_product(light.direction, ray.direction);
         if (alignment < epsilon)
             continue;
-        colour_t ilumination = light.colour * alignment;
     
         // Is an object casting a shadow on this light?
         const ray_t shadow_ray { .origin = ray.origin, .direction = light.direction };
+        bool hit = true;
         for (const auto& obj : s.objects)
             if (obj->hit(shadow_ray))
             {
-                ilumination = { 0 };
+                hit = false;
                 break;
             }
-        ret += ilumination;
+
+        // Add the illumination affect if it hit
+        if (hit)
+            ret += light.colour * alignment;
+    }
+
+    // Calculate the point light contribution
+    for (const auto& light : s.point_lights)
+    {
+        // Calculates the direction of this light
+        const spacial_t direction = light.position - ray.origin;
+
+        // Is the light near where this ray is looking? If it is behind the ray we exit here without further computation
+        const float_t alignment = math::dot_product(direction, ray.direction);
+        if (alignment < epsilon)
+            continue;
+    
+        // Is an object casting a shadow on this light?
+        const ray_t shadow_ray { .origin = ray.origin, .direction = direction };
+        bool hit = true;
+        for (const auto& obj : s.objects)
+            if (obj->hit(shadow_ray))
+            {
+                hit = false;
+                break;
+            }
+
+        // Add the attenutaion if it hit
+        if (hit)
+        {
+            const float_t distance = math::length(direction);
+            const float_t alignment = math::dot_product(ray.direction, direction) / distance;
+            ret += light.colour * alignment / light.attenuate(distance);
+        }
+
     }
         
     // Calculate object emmisive light contribution

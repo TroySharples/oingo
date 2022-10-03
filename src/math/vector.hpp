@@ -68,10 +68,10 @@ constexpr vector<T, S> operator*(const auto& t, const vector<T, S>& v)
     return v * t;
 }
 
-template <typename T, std::size_t S>
-constexpr vector<T, S> operator/(const vector<T, S>& v, const auto& t)
+template <typename T, std::size_t S, typename U>
+constexpr vector<T, S> operator/(const vector<T, S>& v, const U& t)
 {
-    if constexpr (std::is_floating_point<decltype(t)>::value)
+    if constexpr (std::is_floating_point<U>::value)
         return v * (1 / t);
     else
         return v / static_cast<float>(t);

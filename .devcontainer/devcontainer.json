@@ -17,7 +17,8 @@
 				"DavidAnson.vscode-markdownlint",
 				"ms-vscode.makefile-tools",
 				"notskm.clang-tidy",
-				"ngtystr.ppm-pgm-viewer-for-vscode"
+				"ngtystr.ppm-pgm-viewer-for-vscode",
+				"ms-vscode.hexeditor"
 			]
 		}
 	}
