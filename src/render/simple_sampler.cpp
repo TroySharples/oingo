@@ -71,7 +71,7 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     for (const auto& obj : s.objects)
         if (objects::intersection intersec; obj->hit(ray, intersec))
         {
-            ret += intersec.mat.ke;
+            ret += intersec.mat.ke * math::dot_product(intersec.normal, ray.direction);
             break;
         }
 

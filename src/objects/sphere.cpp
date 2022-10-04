@@ -6,19 +6,31 @@ namespace oingo::objects
 bool sphere::hit(const ray_t& ray) const
 {
     const auto oc = ray.origin - _centre;
-    const auto a = math::square_length(ray.direction);
     const auto b = 2 * math::dot_product(oc, ray.direction);
     const auto c = math::square_length(oc) - std::pow(_radius, 2);
-    const auto discriminant = std::pow(b, 2) - 4*a*c;
+    const auto discriminant = std::pow(b, 2) - 4*c;
 
     return discriminant > epsilon;
 }
 
 bool sphere::hit(const ray_t& ray, intersection& intersec) const
 {
-    // Will fill out the ray structure eventually
+    const auto oc = ray.origin - _centre;
+    const auto b = 2 * math::dot_product(oc, ray.direction);
+    const auto c = math::square_length(oc) - std::pow(_radius, 2);
+    const auto discriminant = std::pow(b, 2) - 4*c;
+
+    // Return here if we didn't hit the circle
+    if (discriminant < epsilon)
+        return false;
+
+    // Where on the line did we intersect
+    const float_t t = (-b - std::sqrt(discriminant))/2;
     intersec.mat = mat;
-    return hit(ray);
+    intersec.position = ray.origin + t*ray.direction;
+    intersec.normal = math::normalise(intersec.position - _centre);
+
+    return true;
 }
 
 boundary sphere::get_boundary() const
