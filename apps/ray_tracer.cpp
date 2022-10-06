@@ -27,28 +27,35 @@ int main(int argc, char** argv)
 
     // Camera
     auto cam = std::make_unique<cameras::digital>();
-    cam->fov = 2;
+    cam->fov = 1.5;
     s.cam = std::move(cam);
 
     // Objects
-    auto obj = std::make_unique<objects::sphere>();
-    obj->translate({ 5, 0, 0 });
-    obj->mat.ke = { 0.8, 0.8, 0 };
-    s.objects.emplace_back(std::move(obj));
+    objects::sphere obj;
+    obj.translate({ 5, -8, 0 });
+    obj.scale({ 2, 2, 2 });
+    obj.mat.ke = { 5, 0.8, 0 };
+    obj.mat.ks = { 1, 1, 1 };
+    for (std::size_t i = 0; i < 16; i++)
+    {
+        obj.translate({ 0, 4*std::pow(0.7, i), 0 });
+        obj.scale({ 0.7, 0.7, 0.7 });
+        s.objects.emplace_back(obj.clone());
+    }
 
     // Lighting
     s.ambient_lights.push_back({ 0, 0.1, 0.2 });
-    s.directional_lights.push_back({ 
-        .colour    = { 0.3, 0.6, 0.1 },
-        .direction = math::normalise(spacial_t{ 1, 0.5, 0.5 })
-    });
-    s.point_lights.push_back({
-        .colour                     = { 1, 1, 1 },
-        .position                   = { 3, -1, 0},
-        .constant_attenuation_coef  = 1,
-        .linear_attenuation_coef    = 1,
-        .quadratic_attenuation_coef = 0,
-    });
+    // s.directional_lights.push_back({ 
+    //     .colour    = { 0.1, 0.2, 0.1 },
+    //     .direction = math::normalise(spacial_t{ 1, 0.5, 0.5 })
+    // });
+    // s.point_lights.push_back({
+    //     .colour                     = { 1, 1, 1 },
+    //     .position                   = { 5, -2, 3},
+    //     .constant_attenuation_coef  = 1,
+    //     .linear_attenuation_coef    = 0.5,
+    //     .quadratic_attenuation_coef = 0.7,
+    // });
 
     // Film
     film f(opt.horizonal_pixels, opt.vertical_pixels);
