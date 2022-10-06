@@ -68,6 +68,15 @@ constexpr vector<T, S> operator*(const auto& t, const vector<T, S>& v)
     return v * t;
 }
 
+template <typename T, std::size_t S>
+constexpr vector<T, S> operator*(const vector<T, S>& v, const vector<T, S>& w)
+{
+    vector<T, S> ret;;
+    for (std::size_t i = 0; i < S; i++)
+        ret[i] = v[i] + w[i];
+    return ret;
+}
+
 template <typename T, std::size_t S, typename U>
 constexpr vector<T, S> operator/(const vector<T, S>& v, const U& t)
 {
@@ -165,7 +174,7 @@ template <typename T>
 requires std::floating_point<typename T::value_type>
 typename T::value_type inverse_length(const T& v) noexcept
 {
-    return 1/square_length(v);
+    return 1/length(v);
 }
 
 /**

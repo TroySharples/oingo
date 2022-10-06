@@ -2,12 +2,16 @@
 
 #include "surface.hpp"
 
+#include <memory>
+
 namespace oingo::objects
 {
 
 struct object
 {
     virtual ~object() = default;
+
+    virtual std::unique_ptr<object> clone() const = 0;
 
     virtual bool hit(const ray_t& ray) const = 0;
     virtual bool hit(const ray_t& ray, intersection& intersec) const = 0;

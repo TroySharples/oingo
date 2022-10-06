@@ -10,6 +10,8 @@ class sphere : public object
 public:
     virtual ~sphere() = default;
 
+    std::unique_ptr<object> clone() const override { return std::make_unique<sphere>(*this); }
+
     bool hit(const ray_t& ray) const override;
     bool hit(const ray_t& ray, intersection& intersec) const override;
 

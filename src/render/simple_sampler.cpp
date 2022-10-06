@@ -40,7 +40,7 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     for (const auto& light : s.point_lights)
     {
         // Calculates the direction of this light
-        const spacial_t direction = light.position - ray.origin;
+        const spacial_t direction = math::normalise(light.position - ray.origin);
 
         // Is the light near where this ray is looking? If it is behind the ray we exit here without further computation
         const float_t alignment = math::dot_product(direction, ray.direction);
@@ -64,16 +64,18 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
             const float_t alignment = math::dot_product(ray.direction, direction) / distance;
             ret += light.colour * alignment / light.attenuate(distance);
         }
-
     }
         
     // Calculate object emmisive light contribution
+    std::optional<objects::intersection> nearest_intersec;
     for (const auto& obj : s.objects)
-        if (objects::intersection intersec; obj->hit(ray, intersec))
-        {
-            ret += intersec.mat.ke * math::dot_product(intersec.normal, ray.direction);
-            break;
-        }
+        if (objects::intersection intersec; obj->hit(ray, intersec) && (!nearest_intersec.has_value() || nearest_intersec.value().distance > intersec.distance))
+            nearest_intersec = intersec;
+    if (nearest_intersec.has_value())
+    {
+        const ray_t reflection = { .origin = nearest_intersec.value().position, .direction = ray.direction + 2*nearest_intersec.value().normal };
+        ret += (nearest_intersec.value().mat.ke + nearest_intersec.value().mat.ks * trace_ray(s, reflection)) * nearest_intersec.value().alignment / std::pow(nearest_intersec.value().distance, 2);
+    }
 
     return ret;
 }

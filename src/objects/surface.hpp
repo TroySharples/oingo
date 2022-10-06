@@ -30,6 +30,8 @@ struct intersection
     material mat;
     spacial_t position;
     spacial_t normal;
+    float_t distance;
+    float_t alignment;
 };
 
 }

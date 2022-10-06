@@ -6,7 +6,6 @@
 #include "objects/object.hpp"
 
 #include <vector>
-#include <memory>
 
 namespace oingo::scene
 {

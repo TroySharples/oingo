@@ -25,10 +25,12 @@ bool sphere::hit(const ray_t& ray, intersection& intersec) const
         return false;
 
     // Where on the line did we intersect
-    const float_t t = (-b - std::sqrt(discriminant))/2;
-    intersec.mat = mat;
-    intersec.position = ray.origin + t*ray.direction;
-    intersec.normal = math::normalise(intersec.position - _centre);
+    const float_t t    = std::abs((-b - std::sqrt(discriminant))/2);
+    intersec.mat       = mat;
+    intersec.position  = ray.origin + t*ray.direction;
+    intersec.normal    = math::normalise(intersec.position - _centre);
+    intersec.distance  = t;
+    intersec.alignment = -math::dot_product(ray.direction, intersec.normal);
 
     return true;
 }
