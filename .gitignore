@@ -248,9 +248,5 @@ paket-files/
 *.sln.iml
 build/
 
-# VScode JSON stuff
-.vscode/
-
 # CMake build
 **/build
-renders/output.png

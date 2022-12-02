@@ -74,7 +74,7 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     if (nearest_intersec.has_value())
     {
         const ray_t reflection = { .origin = nearest_intersec.value().position, .direction = ray.direction + 2*nearest_intersec.value().normal };
-        ret += (nearest_intersec.value().mat.ke + nearest_intersec.value().mat.ks * trace_ray(s, reflection)) * nearest_intersec.value().alignment / std::pow(nearest_intersec.value().distance, 2);
+        ret += (nearest_intersec.value().mat.ke + nearest_intersec.value().mat.ks * trace_ray(s, reflection)) * nearest_intersec.value().alignment / (1 + std::pow(nearest_intersec.value().distance, 2));
     }
 
     return ret;

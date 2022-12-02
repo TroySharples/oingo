@@ -1,5 +1,7 @@
 #include "options.hpp"
 
+#include "tests/test_scenes.hpp"
+
 #include <cstring>
 #include <stdexcept>
 
@@ -12,7 +14,7 @@ options parse_options(int argc, char** argv)
 {
     options ret;
 
-    for (int c; (c = getopt(argc, argv, "f:r:o:")) != -1; )
+    for (int c; (c = getopt(argc, argv, "f:r:o:s:")) != -1; )
     {
         switch (c)
         {
@@ -40,6 +42,15 @@ options parse_options(int argc, char** argv)
             case 'o':
             {
                 ret.output_file = optarg;
+                break;
+            }
+            // Test scene
+            case 's':
+            {
+                if (strcmp(optarg, "spheres") == 0)
+                    ret.test_scene = &test_scenes::spheres;
+                else
+                    throw std::runtime_error("Unknown test scene: " + std::string(optarg));
                 break;
             }
             // Unknown

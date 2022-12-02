@@ -1,5 +1,6 @@
 #include "render/simple_sampler.hpp"
-#include "test_scenes.cpp"
+#include "tests/test_scenes.hpp"
+#include "logging.hpp"
 #include "options.hpp"
 #include "ppm.hpp"
 
@@ -19,37 +20,47 @@ static std::string make_tmp_name()
 
 int main(int argc, char** argv)
 {
-    // Parse options
-    options opt = parse_options(argc, argv);
-
-    // Load the scene
-    const scene::scene& s = test_scenes::spheres;
-
-    // Load the film
-    film f(opt.horizonal_pixels, opt.vertical_pixels);
-
-    // Render the image in PPM format
-    const auto ppm_file = make_tmp_name() + ".ppm";
+    try
     {
-        std::ofstream os(ppm_file);
-        render::simple_sampler r;   
-        r.render(s, f, os);
-    }    
+        // Parse options
+        options opt = parse_options(argc, argv);
 
-    // Converts to PNG format if necessaary
-    const auto formatted_file = opt.format == options::format_t::ppm ? ppm_file : ppm_to_png(ppm_file); 
+        // Load the test scene if necessary
+        if (opt.test_scene == nullptr)
+            throw std::runtime_error("We only support test scene rendering at this time");
+        const scene::scene& s = *opt.test_scene;
 
-    if (opt.output_file)
-    {
-        if (std::system(("mv " + formatted_file + ' ' + opt.output_file.value()).c_str()) != 0)
-            throw std::runtime_error("Unable to move file");
+        // Load the film
+        film f(opt.horizonal_pixels, opt.vertical_pixels);
+
+        // Render the image in PPM format
+        const auto ppm_file = make_tmp_name() + ".ppm";
+        {
+            std::ofstream os(ppm_file);
+            render::simple_sampler r;   
+            r.render(s, f, os);
+        }    
+
+        // Converts to PNG format if necessaary
+        const auto formatted_file = opt.format == options::format_t::ppm ? ppm_file : ppm_to_png(ppm_file); 
+
+        if (opt.output_file)
+        {
+            if (std::system(("mv " + formatted_file + ' ' + opt.output_file.value()).c_str()) != 0)
+                throw std::runtime_error("Unable to move file");
+        }
+        else
+        {
+            // Output the PPM file to stdout and delete the temporary PNG
+            std::ifstream is(formatted_file);
+            std::cout << is.rdbuf();
+            std::remove(formatted_file.c_str());
+        }
     }
-    else
+    catch (const std::runtime_error& e)
     {
-        // Output the PPM file to stdout and delete the temporary PNG
-        std::ifstream is(formatted_file);
-        std::cout << is.rdbuf();
-        std::remove(formatted_file.c_str());
+        std::cerr << logging::FG_RED << "Error - " << logging::FG_DEFAULT << e.what() << '\n';
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;

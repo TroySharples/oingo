@@ -1,0 +1,34 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: build",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake template build task"
+		},
+		{
+			"type": "shell",
+			"label": "Render Spheres",
+			"group": "test",
+			"isBackground": true,
+			"dependsOn": "CMake: build",
+			"command": "build/apps/ray-tracer",
+			"args": [ "-f", "png", "-o", "renders/spheres.png", "-r", "1920x1080", "-s", "spheres" ]
+		},
+		{
+			"type": "shell",
+			"label": "8K Render",
+			"group": "test",
+			"isBackground": true,
+			"dependsOn": "CMake: build",
+			"command": "build/apps/ray-tracer",
+			"args": [ "-f", "png", "-o", "renders/8k.png", "-r", "7680x4320", "-s", "spheres" ]
+		}
+	]
+}

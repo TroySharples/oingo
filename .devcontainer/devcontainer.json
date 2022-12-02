@@ -1,8 +1,15 @@
 {
-	"name": "Debian",
+	"name": "Oingo",
+	// Build from Dockerfile with non-root dev user
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "Dockerfile",
+		"args": { "USERNAME": "dev" }
 	},
+	"remoteUser": "dev",
+	// Change default workspace to inside the non-root user
+	"workspaceMount": "source=${localWorkspaceFolder},target=/home/dev/${localWorkspaceFolderBasename},type=bind",
+	"workspaceFolder": "/home/dev/${localWorkspaceFolderBasename}",
+	// Add VSCode extensions
 	"customizations": {
 		"vscode": {
 			"extensions": [

@@ -12,11 +12,15 @@ target_link_libraries(oingo-ppm PUBLIC Oingo::Math)
 add_library(Oingo::PPM ALIAS oingo-ppm)
 
 add_library(oingo-options STATIC options.cpp options.hpp)
-target_link_libraries(oingo-options PUBLIC Oingo::Math)
+target_link_libraries(oingo-options PRIVATE Oingo::Math Oingo::Scene)
 add_library(Oingo::Options ALIAS oingo-options)
+
+add_library(oingo-logging INTERFACE)
+add_library(Oingo::Logging ALIAS oingo-logging)
 
 add_subdirectory(math)
 add_subdirectory(objects)
 add_subdirectory(scene)
 add_subdirectory(render)
 add_subdirectory(cameras)
+add_subdirectory(tests)
