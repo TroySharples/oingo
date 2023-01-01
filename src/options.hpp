@@ -16,7 +16,7 @@ struct options
 
     std::optional<std::string> output_file;
 
-    std::size_t horizonal_pixels = 1920;
+    std::size_t horizontal_pixels = 1920;
     std::size_t vertical_pixels  = 1080;
 
     const scene::scene* test_scene = nullptr;

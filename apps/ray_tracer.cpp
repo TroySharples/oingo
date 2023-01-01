@@ -31,9 +31,9 @@ int main(int argc, char** argv)
         const scene::scene& s = *opt.test_scene;
 
         // Load the film
-        film f(opt.horizonal_pixels, opt.vertical_pixels);
+        film f(opt.horizontal_pixels, opt.vertical_pixels);
 
-        // Render the image in PPM format
+        // Render the image to a temporary PPM file
         const auto ppm_file = make_tmp_name() + ".ppm";
         {
             std::ofstream os(ppm_file);
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
             r.render(s, f, os);
         }    
 
-        // Converts to PNG format if necessaary
+        // Converts to PNG format if necessary
         const auto formatted_file = opt.format == options::format_t::ppm ? ppm_file : ppm_to_png(ppm_file); 
 
         if (opt.output_file)

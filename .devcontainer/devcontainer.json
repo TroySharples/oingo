@@ -22,10 +22,10 @@
 				"GitHub.vscode-pull-request-github",
 				"DavidAnson.vscode-markdownlint",
 				"ms-vscode.makefile-tools",
-				"notskm.clang-tidy",
 				"ngtystr.ppm-pgm-viewer-for-vscode",
 				"ms-vscode.hexeditor",
-				"SanaAjani.taskrunnercode"
+				"SanaAjani.taskrunnercode",
+				"streetsidesoftware.code-spell-checker"
 			]
 		}
 	}

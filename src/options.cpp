@@ -34,7 +34,7 @@ options parse_options(int argc, char** argv)
             {
                 const std::string resolution = std::string(optarg);
                 const std::size_t xpos = resolution.find('x');
-                ret.horizonal_pixels = std::stoi(resolution.substr(0, xpos));
+                ret.horizontal_pixels = std::stoi(resolution.substr(0, xpos));
                 ret.vertical_pixels  = std::stoi(resolution.substr(xpos + 1, resolution.length()));
                 break;
             }
