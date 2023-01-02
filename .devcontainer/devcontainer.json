@@ -25,7 +25,8 @@
 				"ngtystr.ppm-pgm-viewer-for-vscode",
 				"ms-vscode.hexeditor",
 				"SanaAjani.taskrunnercode",
-				"streetsidesoftware.code-spell-checker"
+				"streetsidesoftware.code-spell-checker",
+				"eamodio.gitlens"
 			]
 		}
 	}
