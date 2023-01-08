@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector.hpp"
+#include "tensor.hpp"
 
 namespace oingo::math
 {
@@ -24,6 +25,17 @@ struct matrix : std::array<T, M*N>
     constexpr matrix& operator*=(const auto& t)   noexcept;
     constexpr matrix& operator/=(const auto& t)   noexcept;
 };
+
+template <typename T, std::size_t M>
+constexpr matrix<T, M, M> identity()
+{
+    matrix<T, M, M> ret { 0 };
+    for (std::size_t i = 0; i < M; i++)
+        for (std::size_t j = 0; j < M; j++)
+            ret(i, j) = kronecker_delta<T>(i, j);
+
+    return ret;
+}
 
 // Non-member arithmetic overloads
 template <typename T, std::size_t M, std::size_t N>
@@ -124,6 +136,42 @@ matrix<T, 3, 3> rotation(T a, T b, T c)
              cos(b)*sin(c), sin(a)*sin(b)*sin(c) + cos(a)*cos(c), cos(a)*sin(b)*sin(c) - sin(a)*cos(c),
             -sin(b),        sin(a)*cos(b),                        cos(a)*cos(b) };
 
+}
+
+/**
+ * @brief Calculates the determinant
+ * We only support 2x2 and 3x3 matrices at the moment
+ */
+template <typename T, std::size_t M>
+requires std::floating_point<T> && (M == 3 || M == 2)
+constexpr T determinant(const matrix<T, M, M>& A)
+{
+    T ret = 0;
+
+    if constexpr (M == 2)
+        ret = A(0, 0) * A(1, 1) - A(0, 1) * A(1, 0);
+    else
+        for (std::size_t i = 0; i < 3; i++)
+            for (std::size_t j = 0; j < 3; j++)
+                for (std::size_t k = 0; k < 3; k++)
+                    ret += levi_civita<T>(i, j, k) * A(0, i) * A(1, j) * A(2, k);    
+
+    return ret;
+}
+
+/**
+ * @brief Calculates the inverse
+ * We only support 3x3 matrices at the moment
+ */
+template <typename T, std::size_t M>
+requires std::floating_point<T> && (M == 3)
+constexpr matrix<T, M, M> invert(const matrix<T, M, M>& A)
+{
+    matrix<T, M, M> ret;
+
+
+
+    return ret;
 }
 
 //  Ostream overload

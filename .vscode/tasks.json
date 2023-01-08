@@ -14,6 +14,15 @@
 		},
 		{
 			"type": "shell",
+			"label": "Render Sphere",
+			"group": "test",
+			"isBackground": true,
+			"dependsOn": "CMake: build",
+			"command": "build/apps/ray-tracer",
+			"args": [ "-f", "png", "-o", "renders/spheres.png", "-r", "1920x1080", "-s", "sphere" ]
+		},
+		{
+			"type": "shell",
 			"label": "Render Spheres",
 			"group": "test",
 			"isBackground": true,

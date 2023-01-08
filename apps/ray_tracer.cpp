@@ -1,5 +1,4 @@
-#include "render/simple_sampler.hpp"
-#include "tests/test_scenes.hpp"
+#include "integrators/simple_sampler.hpp"
 #include "logging.hpp"
 #include "options.hpp"
 #include "ppm.hpp"
@@ -31,13 +30,13 @@ int main(int argc, char** argv)
         const scene::scene& s = *opt.test_scene;
 
         // Load the film
-        film f(opt.horizontal_pixels, opt.vertical_pixels);
+        cameras::film f(opt.horizontal_pixels, opt.vertical_pixels);
 
         // Render the image to a temporary PPM file
         const auto ppm_file = make_tmp_name() + ".ppm";
         {
             std::ofstream os(ppm_file);
-            render::simple_sampler r;   
+            integrator::simple_sampler r;   
             r.render(s, f, os);
         }    
 
@@ -59,7 +58,7 @@ int main(int argc, char** argv)
     }
     catch (const std::runtime_error& e)
     {
-        std::cerr << logging::FG_RED << "Error - " << logging::FG_DEFAULT << e.what() << '\n';
+        std::cerr << colour_code::FG_RED << "Error - " << colour_code::FG_DEFAULT << e.what() << '\n';
         return EXIT_FAILURE;
     }
 

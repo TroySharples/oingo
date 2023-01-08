@@ -15,7 +15,7 @@ using float_t = double;
 using float_t = float;
 #endif
 
-constexpr float_t epsilon = std::numeric_limits<float_t>::epsilon();
+constexpr float_t ϵ = std::numeric_limits<float_t>::epsilon();
 
 // Some useful geometric typedefs 
 using ray_t       = math::line<float_t, 3>;

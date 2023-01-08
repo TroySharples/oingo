@@ -27,7 +27,7 @@ void digital::set_updir(const spacial_t& updir)
 
 void digital::set_leftdir()
 {
-    if (math::dot_product(_viewdir, _updir) > epsilon)
+    if (math::dot_product(_viewdir, _updir) > ϵ)
         throw std::runtime_error("Invalid camera orientation - viewdir and updir are not orthogonal");
 
     _leftdir = math::cross_product(_viewdir, _updir);

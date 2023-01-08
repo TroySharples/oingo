@@ -2,7 +2,7 @@
 
 #include "math/vector.hpp"
 
-namespace oingo
+namespace oingo::cameras
 {
 
 class film

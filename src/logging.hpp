@@ -1,9 +1,9 @@
 #include <ostream>
 
-namespace oingo::logging
+namespace oingo
 {
 
-enum colour_code {
+enum class colour_code {
     FG_RED     = 31,
     FG_GREEN   = 32,
     FG_BLUE    = 34,
@@ -14,7 +14,7 @@ enum colour_code {
     BG_DEFAULT = 49
 };
 
-std::ostream& operator<<(std::ostream& os, colour_code code) {
+std::ostream& operator<<(std::ostream& os, const colour_code& code) {
     return os << "\033[" << static_cast<int>(code) << "m";
 }
 

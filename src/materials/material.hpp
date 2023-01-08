@@ -4,7 +4,7 @@
 
 #include <optional>
 
-namespace oingo::objects
+namespace oingo::materials
 {
 
 struct material
@@ -23,15 +23,6 @@ struct material
     std::optional<colour_t> kr;
     float shininess;
     float index;
-};
-
-struct intersection
-{
-    material mat;
-    spacial_t position;
-    spacial_t normal;
-    float_t distance;
-    float_t alignment;
 };
 
 }

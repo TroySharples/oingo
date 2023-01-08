@@ -1,6 +1,6 @@
 #include "options.hpp"
 
-#include "tests/test_scenes.hpp"
+#include "scene/test_scenes.hpp"
 
 #include <cstring>
 #include <stdexcept>
@@ -47,8 +47,10 @@ options parse_options(int argc, char** argv)
             // Test scene
             case 's':
             {
-                if (strcmp(optarg, "spheres") == 0)
-                    ret.test_scene = &test_scenes::spheres;
+                if (strcmp(optarg, "sphere") == 0)
+                    ret.test_scene = &scene::single_sphere;
+                else if (strcmp(optarg, "spheres") == 0)
+                    ret.test_scene = &scene::multiple_spheres;
                 else
                     throw std::runtime_error("Unknown test scene: " + std::string(optarg));
                 break;
