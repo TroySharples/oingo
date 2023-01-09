@@ -19,11 +19,11 @@ static scene make_single_sphere()
     // Object
     ret.objects.emplace_back(object{
         .shp = std::make_unique<shapes::sphere>(),
-        .pos = { 2, 0, 0 },
+        .pos = { 5, 0, 0 },
         .trans = { 
             1, 0, 0,
-            0, 5, 0,
-            0, 0, 5
+            3, 5, 0,
+            0, 2, 1
         },
         .mat = materials::matt_white
     });

@@ -36,7 +36,7 @@ bool sphere::hit(const ray_t& ray, intersection& intersec) const
 
     // Where on the line did we intersect
     const auto δ = std::sqrt(Δ), α = -b - δ, β = -b + δ;
-    const auto t = (α > 0) ? α : β;
+    const auto t = (α > 0) ? α/2 : β/2;
 
     // Fill out the intersection struct
     intersec.t = t;

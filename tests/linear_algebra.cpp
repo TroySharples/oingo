@@ -20,6 +20,7 @@ static bool calculate_mult(const auto& A, const auto& v)
         << "A:\n" << A
         << "v:\n" << v << '\n'
         << "A*v:\n" << A * v << "\n\n";
+    return true;
 }
 
 int main()

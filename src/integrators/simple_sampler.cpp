@@ -73,18 +73,18 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     {
         const ray_t transformed_ray = {
             .origin    = math::invert(obj.trans) * (ray.origin - obj.pos),
-            .direction = math::invert(obj.trans) * ray.direction
+            .direction = (math::invert(obj.trans) * ray.direction).normalise()
         };
         if (shapes::shape::intersection intersec; obj.shp->hit(transformed_ray, intersec) && (!nearest_intersec.has_value() || nearest_intersec.value().t > intersec.t))
         {
-            nearest_intersec = { .t = intersec.t, .n = obj.trans * intersec.n };
+            nearest_intersec = { .t = intersec.t, .n = math::invert(math::transpose(obj.trans)) * intersec.n };
             mat = obj.mat;
         }
     }
     if (nearest_intersec.has_value())
     {
         nearest_intersec.value().n.normalise();
-        ret += mat.ke * std::abs(math::dot_product(nearest_intersec.value().n.normalise(), ray.direction));// / (1 + std::pow(nearest_intersec.value().t, 2));
+        ret += mat.ke * std::abs(math::dot_product(nearest_intersec.value().n, ray.direction));// / (1 + std::pow(nearest_intersec.value().t, 2));
     }
 
     return ret;
