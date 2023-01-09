@@ -2,6 +2,7 @@
 
 #include "vector.hpp"
 #include "tensor.hpp"
+#include "floating_point.hpp"
 
 namespace oingo::math
 {
@@ -72,7 +73,7 @@ constexpr matrix<T, M, N> operator*(const auto& t, const matrix<T, M, N>& A)
 template <typename T, std::size_t M, std::size_t N, std::size_t O>
 constexpr matrix<T, M, O> operator*(const matrix<T, M, N>& A, const matrix<T, N, O>& w)
 {
-    matrix<T, M, O> ret = {};
+    matrix<T, M, O> ret = { 0 };
     for (std::size_t i = 0; i < M; i++) 
         for (std::size_t j = 0; j < N; j++) 
             for (std::size_t k = 0; k < O; k++) 
@@ -83,20 +84,20 @@ constexpr matrix<T, M, O> operator*(const matrix<T, M, N>& A, const matrix<T, N,
 template <typename T, std::size_t M, std::size_t N>
 constexpr vector<T, M> operator*(const matrix<T, M, N>& A, const vector<T, N>& v)
 {
-    vector<T, N> ret = {};
+    vector<T, N> ret = { 0 };
     for (std::size_t i = 0; i < N; i++) 
         for (std::size_t j = 0; j < M; j++) 
             ret[i] += A(i, j)*v[j];
     return ret;
 }
 
-template <typename T, std::size_t M, std::size_t N>
-constexpr matrix<T, M, N> operator/(const matrix<T, M, N>& A, const auto& t)
+template <typename T, std::size_t M, std::size_t N, typename S>
+constexpr matrix<T, M, N> operator/(const matrix<T, M, N>& A, const S& t)
 {
-    if constexpr (std::is_floating_point<decltype(t)>::value)
-        return t * (1 / t);
+    if constexpr (std::is_floating_point<S>::value)
+        return A * (1 / t);
     else
-        return t / static_cast<float>(t);
+        return A / static_cast<float>(t);
 }
 
 // Member arithmetic overloads
@@ -135,7 +136,6 @@ matrix<T, 3, 3> rotation(T a, T b, T c)
     return { cos(b)*cos(c), sin(a)*sin(b)*cos(c) - cos(a)*sin(c), cos(a)*sin(b)*cos(c) + sin(a)*sin(c),
              cos(b)*sin(c), sin(a)*sin(b)*sin(c) + cos(a)*cos(c), cos(a)*sin(b)*sin(c) - sin(a)*cos(c),
             -sin(b),        sin(a)*cos(b),                        cos(a)*cos(b) };
-
 }
 
 /**
@@ -160,6 +160,19 @@ constexpr T determinant(const matrix<T, M, M>& A)
 }
 
 /**
+ * @brief Calculates the transpose
+ */
+template <typename T, std::size_t M>
+constexpr matrix<T, M, M> transpose(const matrix<T, M, M>& A)
+{
+    matrix<T, M, M> ret;
+    for (std::size_t i = 0; i < M; i++)
+        for (std::size_t j = 0; j < M; j++)
+            ret(i, j) = A(j, i);
+    return ret;
+}
+
+/**
  * @brief Calculates the inverse
  * We only support 3x3 matrices at the moment
  */
@@ -167,22 +180,37 @@ template <typename T, std::size_t M>
 requires std::floating_point<T> && (M == 3)
 constexpr matrix<T, M, M> invert(const matrix<T, M, M>& A)
 {
-    matrix<T, M, M> ret;
+    // Find the determinant of the matrix
+    const auto det = determinant(A);
+    if (std::abs(det) < ϵ)
+        throw std::runtime_error("Matrix is singular");
 
+    // Find the matrix of cofactors
+    matrix<T, M, M> cofactors;
+    for (std::size_t i = 0; i < 3; i++)
+        for (std::size_t j = 0; j < 3; j++)
+            cofactors(i, j) = determinant(matrix<T, 2, 2>{
+                A((i + 1) % 3, (j + 1) % 3), A((i + 1) % 3, (j + 2) % 3),
+                A((i + 2) % 3, (j + 1) % 3), A((i + 2) % 3, (j + 2) % 3)
+            });
 
-
-    return ret;
+    // Divide through the transpose by the determinant and return
+    return transpose(cofactors) / det;
 }
 
 //  Ostream overload
 template <typename T, std::size_t M, std::size_t N>
 std::ostream& operator<<(std::ostream& os, const matrix<T, M, N>& A)
 {
-    for (const auto& i : A)
-        if constexpr (std::is_integral<T>::value)
-            os << static_cast<int>(i) << ' ';
-        else
-            os << i << ' ';
+    for (std::size_t i = 0; i < M; i++)
+    {
+        for (std::size_t j = 0; j < N; j++)
+            if constexpr (std::is_integral<T>::value)
+                os << static_cast<int>(A(i, j)) << ' ';
+            else
+                os << A(i, j) << ' ';
+            os << '\n';
+    }
     return os;
 }
 

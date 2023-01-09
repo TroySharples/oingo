@@ -9,7 +9,7 @@ bool sphere::hit(const ray_t& ray) const
     const auto b = 2 * math::dot_product(ray.origin, ray.direction);
     const auto c = math::square_length(ray.origin) - 1;
     const auto Δ = std::pow(b, 2) - 4*c;
-
+    
     if (Δ < ϵ)
         return false;
 
@@ -40,7 +40,7 @@ bool sphere::hit(const ray_t& ray, intersection& intersec) const
 
     // Fill out the intersection struct
     intersec.t = t;
-    intersec.n = -ray[t];
+    intersec.n = ray[t];
 
     return true;
 }

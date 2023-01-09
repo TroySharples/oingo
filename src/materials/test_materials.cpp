@@ -3,8 +3,8 @@
 namespace oingo::materials
 {
 
-    const material matt_green {
-        .ke = { 0.3, 0.2, 1 },
+    const material matt_white {
+        .ke = { 0.9, 0.9, 0.9 },
         .ks = { 1, 1, 1 }
     };
 

@@ -9,9 +9,9 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
 {
     colour_t ret { 0 };
 
-    // // Calculate ambient light contribution
-    // for (const auto& light : s.ambient_lights)
-    //     ret += light.colour;
+    // Calculate ambient light contribution
+    for (const auto& light : s.ambient_lights)
+        ret += light.colour;
 
     // // Calculate the directional light contribution
     // for (const auto& light : s.directional_lights)
@@ -66,16 +66,26 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     //     }
     // }
         
-    // // Calculate shape emmisive light contribution
-    // std::optional<objects::intersection> nearest_intersec;
-    // for (const auto& obj : s.objects)
-    //     if (objects::intersection intersec; obj->hit(ray, intersec) && (!nearest_intersec.has_value() || nearest_intersec.value().distance > intersec.distance))
-    //         nearest_intersec = intersec;
-    // if (nearest_intersec.has_value())
-    // {
-    //     const ray_t reflection = { .origin = nearest_intersec.value().position, .direction = ray.direction + 2*nearest_intersec.value().normal };
-    //     ret += (nearest_intersec.value().mat.ke + nearest_intersec.value().mat.ks * trace_ray(s, reflection)) * nearest_intersec.value().alignment / (1 + std::pow(nearest_intersec.value().distance, 2));
-    // }
+    // Calculate shape emmisive light contribution
+    std::optional<shapes::shape::intersection> nearest_intersec;
+    materials::material mat;
+    for (const auto& obj : s.objects)
+    {
+        const ray_t transformed_ray = {
+            .origin    = math::invert(obj.trans) * (ray.origin - obj.pos),
+            .direction = math::invert(obj.trans) * ray.direction
+        };
+        if (shapes::shape::intersection intersec; obj.shp->hit(transformed_ray, intersec) && (!nearest_intersec.has_value() || nearest_intersec.value().t > intersec.t))
+        {
+            nearest_intersec = { .t = intersec.t, .n = obj.trans * intersec.n };
+            mat = obj.mat;
+        }
+    }
+    if (nearest_intersec.has_value())
+    {
+        nearest_intersec.value().n.normalise();
+        ret += mat.ke * std::abs(math::dot_product(nearest_intersec.value().n.normalise(), ray.direction));// / (1 + std::pow(nearest_intersec.value().t, 2));
+    }
 
     return ret;
 }

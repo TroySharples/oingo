@@ -4,5 +4,5 @@
 
 namespace oingo::materials
 {
-    extern const material matt_green;
+    extern const material matt_white;
 }

@@ -29,13 +29,15 @@ struct vector : std::array<T, S>
     constexpr vector& operator-=(const vector& v) noexcept;
     constexpr vector& operator*=(const auto& t) noexcept;
     constexpr vector& operator/=(const auto& t) noexcept;
+
+    constexpr vector& normalise() noexcept;
 };
 
 // Non-member arithmetic overloads
 template <typename T, std::size_t S>
 constexpr vector<T, S> operator+(const vector<T, S>& v, const vector<T, S>& w)
 {
-    vector<T, S> ret {};
+    vector<T, S> ret;
     for (std::size_t i = 0; i < S; i++) 
         ret[i] = v[i] + w[i];
     return ret;
@@ -84,31 +86,6 @@ constexpr vector<T, S> operator/(const vector<T, S>& v, const U& t)
         return v * (1 / t);
     else
         return v / static_cast<float>(t);
-}
-
-// Member arithmetic overloads
-template <typename T, std::size_t S>
-constexpr vector<T, S>& vector<T, S>::operator+=(const vector<T, S>& t) noexcept
-{
-    return (*this) = (*this)+t;
-}
-
-template <typename T, std::size_t S>
-constexpr vector<T, S>& vector<T, S>::operator-=(const vector<T, S>& t) noexcept
-{
-    return (*this) = (*this)-t;
-}
-
-template <typename T, std::size_t S>
-constexpr vector<T, S>& vector<T, S>::operator*=(const auto& t) noexcept
-{
-    return (*this) = (*this)*t;
-}
-
-template <typename T, std::size_t S>
-constexpr vector<T, S>& vector<T, S>::operator/=(const auto& t) noexcept
-{
-    return (*this) = (*this)/t;
 }
 
 // Dot, cross, and triple product
@@ -185,7 +162,6 @@ auto normalise(const auto& v)
     return v * inverse_length(v);
 }
 
-
 // Ostream overload
 template <typename T, std::size_t S>
 std::ostream& operator<<(std::ostream& os, const vector<T, S>& v)
@@ -196,6 +172,37 @@ std::ostream& operator<<(std::ostream& os, const vector<T, S>& v)
         else
             os << i << ' ';
     return os;
+}
+
+// Member arithmetic overloads
+template <typename T, std::size_t S>
+constexpr vector<T, S>& vector<T, S>::operator+=(const vector<T, S>& t) noexcept
+{
+    return (*this) = (*this)+t;
+}
+
+template <typename T, std::size_t S>
+constexpr vector<T, S>& vector<T, S>::operator-=(const vector<T, S>& t) noexcept
+{
+    return (*this) = (*this)-t;
+}
+
+template <typename T, std::size_t S>
+constexpr vector<T, S>& vector<T, S>::operator*=(const auto& t) noexcept
+{
+    return (*this) = (*this)*t;
+}
+
+template <typename T, std::size_t S>
+constexpr vector<T, S>& vector<T, S>::operator/=(const auto& t) noexcept
+{
+    return (*this) = (*this)/t;
+}
+
+template <typename T, std::size_t S>
+constexpr vector<T, S>& vector<T, S>::normalise() noexcept
+{
+    return (*this) = math::normalise(*this);
 }
 
 }
