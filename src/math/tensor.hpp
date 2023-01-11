@@ -7,11 +7,6 @@
 namespace oingo::math
 {
 
-constexpr std::size_t kronecker_delta(std::size_t i, std::size_t j)
-{
-    return i == j;
-}
-
 template <typename T>
 constexpr T kronecker_delta(std::size_t i, std::size_t j)
 {

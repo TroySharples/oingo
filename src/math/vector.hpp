@@ -19,8 +19,8 @@ template <typename T, std::size_t S>
 struct vector : std::array<T, S>
 {
     // Equivalence overloads
-    bool operator==(const vector& v) const noexcept { return std::equal(this->begin(), this->end(), v.begin()); }
-    bool operator!=(const vector& v) const noexcept { return !(*this == v); }
+    constexpr bool operator==(const vector& v) const noexcept { return std::equal(this->begin(), this->end(), v.begin()); }
+    constexpr bool operator!=(const vector& v) const noexcept { return !(*this == v); }
 
     // General arithmetic overloads
     constexpr const vector& operator+() const noexcept { return *this; }

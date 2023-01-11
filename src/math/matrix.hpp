@@ -11,12 +11,12 @@ template <typename T, std::size_t M, std::size_t N>
 struct matrix : std::array<T, M*N>
 {
     // Quality-of-life overloads
-    bool operator==(const matrix& A) const { return std::equal(this->begin(), this->end(), A.begin()); }
-    bool operator!=(const matrix& A) const { return !(*this == A); }
+    constexpr bool operator==(const matrix& A) const { return std::equal(this->begin(), this->end(), A.begin()); }
+    constexpr bool operator!=(const matrix& A) const { return !(*this == A); }
 
     // Index operators (unfortunately we cannot overload [] because this needs exactly one argument)
-    T& operator()(std::size_t m, std::size_t n) { return (*this)[m*N + n]; }
-    const T& operator()(std::size_t m, std::size_t n) const { return (*this)[m*N + n]; }
+    constexpr T& operator()(std::size_t m, std::size_t n) { return (*this)[m*N + n]; }
+    constexpr const T& operator()(std::size_t m, std::size_t n) const { return (*this)[m*N + n]; }
 
     // Arithmetic overloads
     constexpr const matrix& operator+() const     noexcept { return *this; }
