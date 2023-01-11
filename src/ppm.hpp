@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 
+#include <filesystem>
 #include <iostream>
 
 namespace oingo
@@ -14,7 +15,7 @@ namespace oingo
  * @param ppm The original PPM file
  * @return auto The name of the returned PNG file
  */
-std::string ppm_to_png(const std::string& ppm_file);
+std::filesystem::path ppm_to_png(const std::filesystem::path& ppm_file);
 
 /**
  * @brief Writes the common PPM header

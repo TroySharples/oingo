@@ -52,7 +52,8 @@
         "cstring": "cpp",
         "codecvt": "cpp",
         "iomanip": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "filesystem": "cpp"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.codeAnalysis.clangTidy.enabled": true,

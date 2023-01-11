@@ -1,8 +1,8 @@
 #pragma once
 
-#include <optional>
 #include <string>
 #include <cstddef>
+#include <filesystem>
 
 namespace oingo
 {
@@ -14,7 +14,7 @@ struct options
     enum format_t { png, ppm };
     format_t format = png;
 
-    std::optional<std::string> output_file;
+    std::filesystem::path output_file;
 
     std::size_t horizontal_pixels = 1920;
     std::size_t vertical_pixels  = 1080;

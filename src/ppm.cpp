@@ -3,14 +3,14 @@
 namespace oingo
 {
     
-std::string ppm_to_png(const std::string& ppm_file)
+std::filesystem::path ppm_to_png(const std::filesystem::path& ppm_file)
 {
-    const std::string png_file = ppm_file.substr(0, ppm_file.find_last_of(".")) + ".png";
-    if (std::system(("convert " + ppm_file + ' ' + png_file).c_str()) != 0)
-        throw std::runtime_error("Could not convert " + ppm_file + " to " + png_file);
+    const auto png_file = std::filesystem::path(ppm_file).replace_extension(".png");
+    if (std::system(("convert " + std::string(ppm_file) + ' ' + std::string(png_file)).c_str()) != 0)
+        throw std::runtime_error("Could not convert " + std::string(ppm_file) + " to " + std::string(png_file));
     
-    if (std::remove(ppm_file.c_str()) != 0)
-        throw std::runtime_error("Could not delete " + ppm_file);
+    if (!std::filesystem::remove(ppm_file))
+        throw std::runtime_error("Could not delete " + std::string(ppm_file));
 
     return png_file;
 }

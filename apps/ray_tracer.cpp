@@ -5,16 +5,36 @@
 
 #include <chrono>
 #include <fstream>
-#include <filesystem>
 #include <iostream>
 
 using namespace oingo;
 
-static std::string make_tmp_name()
+static std::filesystem::path make_tmp_name(const std::filesystem::path& path = { })
 {
-    // Our temporary PPM file is just the unix time for now
-    static constexpr const char* TMP_PREFIX = "/tmp/.";
-    return TMP_PREFIX + std::to_string(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+    std::filesystem::path ret = path;
+
+    // Remove any extensions if necessary
+    if (ret.has_extension())
+        ret.replace_extension();
+
+    // Generate a unique filename from the current time if we weren't given one, and make the one we were given to an absolute path if we were
+    if (!ret.has_filename())
+        ret.replace_filename(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
+    else if (!ret.has_parent_path())
+        ret = std::filesystem::current_path() / ret;
+
+    // Prepend a temporary path if we still don't have a parent directory
+    if (!ret.has_parent_path())
+        ret = std::filesystem::temp_directory_path() / ret;
+
+    // Make this a hidden file by prepending "." to the file name if it isn't already hidden
+    if (std::string(ret.filename())[0] != '.')
+        ret.replace_filename(std::string(".") + std::string(ret.filename()));
+    
+    // Add the PPM extension
+    ret.replace_extension(".ppm");
+
+    return ret;
 }
 
 int main(int argc, char** argv) try
@@ -31,7 +51,7 @@ int main(int argc, char** argv) try
     cameras::film f(opt.horizontal_pixels, opt.vertical_pixels);
 
     // Render the image to a temporary PPM file
-    const auto ppm_file = make_tmp_name() + ".ppm";
+    const auto ppm_file = make_tmp_name(opt.output_file);
     {
         std::ofstream os(ppm_file);
         integrator::simple_sampler r;   
@@ -39,9 +59,9 @@ int main(int argc, char** argv) try
     }    
 
     // Converts to PNG format if necessary
-    const auto formatted_file = opt.format == options::format_t::ppm ? ppm_file : ppm_to_png(ppm_file); 
+    const auto formatted_file = (opt.format == options::format_t::ppm ? ppm_file : ppm_to_png(ppm_file)); 
 
-    if (!opt.output_file)
+    if (!opt.output_file.has_filename())
     {
         // Output the PPM file to stdout and delete the temporary PNG
         {
@@ -50,9 +70,21 @@ int main(int argc, char** argv) try
         }
         std::remove(formatted_file.c_str());
     }
-    else if (std::system(("mv " + formatted_file + ' ' + opt.output_file.value()).c_str()) != 0)
+    else
     {
-        throw std::runtime_error("Unable to move file");
+        // We try an efficient filesystem rename. If this fails due to a filesystem error (e.g. the paths are on different
+        // filesystems) we try an old-fashioned copy-and-delete instead
+        try 
+        {
+            std::filesystem::rename(formatted_file, opt.output_file);
+        }
+        catch (const std::filesystem::filesystem_error& e)
+        {
+            std::filesystem::remove(opt.output_file);
+            std::filesystem::copy(formatted_file, opt.output_file);
+            if (!std::filesystem::remove(formatted_file))
+                throw std::runtime_error("Could not delete " + std::string(ppm_file));
+        }
     }
 
     return EXIT_SUCCESS;
