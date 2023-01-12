@@ -5,6 +5,10 @@
 namespace oingo::shapes
 {
 
+/**
+ * @brief The unit sphere
+ * Satisfies equation x^2 + y^2 + z^2 = 1
+ */
 class sphere : public shape
 {
 public:

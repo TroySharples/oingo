@@ -14,7 +14,7 @@ namespace oingo::scene
     {
         std::unique_ptr<shapes::shape> shp;
         spacial_t pos = { 0, 0, 0 };
-        transform_t trans = math::identity<float_t, 3>();
+        transform_t trans = math::identity<floating_point_t, 3>();
         materials::material mat;
     };
 

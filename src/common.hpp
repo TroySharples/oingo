@@ -7,9 +7,9 @@ namespace oingo
 {
 
 // Some useful geometric typedefs 
-using ray_t       = math::line<float_t, 3>;
-using spacial_t   = math::vector<float_t, 3>;
-using transform_t = math::matrix<float_t,3, 3>;
+using ray_t       = math::line<floating_point_t, 3>;
+using spacial_t   = math::vector<floating_point_t, 3>;
+using transform_t = math::matrix<floating_point_t,3, 3>;
 
 // We define our bounding volumes with this
 struct boundary

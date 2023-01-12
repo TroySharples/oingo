@@ -17,7 +17,7 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     // for (const auto& light : s.directional_lights)
     // {
     //     // Is the light near where this ray is looking? If it is behind the ray we exit here without further computation
-    //     const float_t alignment = math::dot_product(light.direction, ray.direction);
+    //     const floating_point_t alignment = math::dot_product(light.direction, ray.direction);
     //     if (alignment < ϵ)
     //         continue;
     
@@ -43,7 +43,7 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     //     const spacial_t direction = math::normalise(light.position - ray.origin);
 
     //     // Is the light near where this ray is looking? If it is behind the ray we exit here without further computation
-    //     const float_t alignment = math::dot_product(direction, ray.direction);
+    //     const floating_point_t alignment = math::dot_product(direction, ray.direction);
     //     if (alignment < ϵ)
     //         continue;
     
@@ -60,8 +60,8 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     //     // Add the attenuation if it hit
     //     if (hit)
     //     {
-    //         const float_t distance = math::length(direction);
-    //         const float_t alignment = math::dot_product(ray.direction, direction) / distance;
+    //         const floating_point_t distance = math::length(direction);
+    //         const floating_point_t alignment = math::dot_product(ray.direction, direction) / distance;
     //         ret += light.colour * alignment / light.attenuate(distance);
     //     }
     // }

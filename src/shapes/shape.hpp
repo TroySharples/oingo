@@ -15,7 +15,7 @@ struct shape
 
     struct intersection
     {
-        float_t t;
+        floating_point_t t;
         spacial_t n;
     };
 

@@ -6,6 +6,6 @@ namespace oingo::scene
 {
 
 extern const scene single_sphere;
-extern const scene multiple_spheres;
+extern const scene single_cylinder;
 
 }

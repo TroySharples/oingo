@@ -25,21 +25,21 @@ static bool calculate_mult(const auto& A, const auto& v)
 
 int main()
 {
-    constexpr auto MAT0 = math::identity<float_t, 3>();
-    constexpr auto MAT1 = math::matrix<float_t, 3, 3>{
+    constexpr auto MAT0 = math::identity<floating_point_t, 3>();
+    constexpr auto MAT1 = math::matrix<floating_point_t, 3, 3>{
         1,  0, -3,
         4, -8, 12,
         3, 15,  0
     };
-    constexpr auto MAT2 = math::matrix<float_t, 3, 3>{
+    constexpr auto MAT2 = math::matrix<floating_point_t, 3, 3>{
         1, 0, 0,
         0, 5, 0,
         0, 0, 5
     };
 
-    constexpr auto VEC0 = math::vector<float_t, 3>{ 1,  0, 0 };
-    constexpr auto VEC1 = math::vector<float_t, 3>{ 7, -4, 2 };
-    constexpr auto VEC2 = math::vector<float_t, 3>{ 1,  0, 3 };
+    constexpr auto VEC0 = math::vector<floating_point_t, 3>{ 1,  0, 0 };
+    constexpr auto VEC1 = math::vector<floating_point_t, 3>{ 7, -4, 2 };
+    constexpr auto VEC2 = math::vector<floating_point_t, 3>{ 1,  0, 3 };
 
     for (const auto& A : { MAT0, MAT1, MAT2 })
     {
