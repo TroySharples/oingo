@@ -35,7 +35,7 @@ static scene make_single_sphere()
     return ret;
 }
 
-static scene make_single_cylinder()
+static scene make_cylinders()
 {
     scene ret;
 
@@ -45,18 +45,27 @@ static scene make_single_cylinder()
 
     ret.objects.emplace_back(object{
         .shp = std::make_unique<shapes::cylinder>(),
-        .pos = { 5, 0, 0 },
-        .trans = math::rotation<floating_point_t>(0.3, 0.3, 0.3),
+        .pos = { 8, -8, 0 },
         .mat = materials::matt_white
     });
+
+    for (std::size_t i = 0; i < 5; i++)
+    {
+        const auto& back = ret.objects.back();
+        ret.objects.emplace_back(object({
+            .shp   = back.shp->clone(),
+            .pos   = back.pos + spacial_t({ 0, 3, 0 }),
+            .trans = back.trans * math::rotation<floating_point_t>(0.5, 0.5, 0.5),
+            .mat   = back.mat
+        }));
+    }
 
     ret.ambient_lights.push_back({ 0, 0.1, 0.1 });
 
     return ret;
 }
 
-const scene single_sphere    = make_single_sphere();
-const scene multiple_spheres = make_multiple_spheres();
-const scene single_cylinder  = make_single_cylinder();
+const scene single_sphere = make_single_sphere();
+const scene cylinders     = make_cylinders();
 
 }

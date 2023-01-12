@@ -49,10 +49,8 @@ options parse_options(int argc, char** argv)
             {
                 if (strcmp(optarg, "sphere") == 0)
                     ret.test_scene = &scene::single_sphere;
-                else if (strcmp(optarg, "spheres") == 0)
-                    ret.test_scene = &scene::multiple_spheres;
-                else if (strcmp(optarg, "cylinder") == 0)
-                    ret.test_scene = &scene::single_cylinder;
+                else if (strcmp(optarg, "cylinders") == 0)
+                    ret.test_scene = &scene::cylinders;
                 else
                     throw std::runtime_error("Unknown test scene: " + std::string(optarg));
                 break;

@@ -23,12 +23,12 @@
 		},
 		{
 			"type": "shell",
-			"label": "Render Cylinder",
+			"label": "Render Cylinders",
 			"group": "test",
 			"isBackground": true,
 			"dependsOn": "CMake: build",
 			"command": "build/apps/ray-tracer",
-			"args": [ "-f", "png", "-o", "renders/cylinder.png", "-r", "1920x1080", "-s", "cylinder" ]
+			"args": [ "-f", "png", "-o", "renders/cylinders.png", "-r", "1920x1080", "-s", "cylinders" ]
 		},
 		{
 			"type": "shell",
