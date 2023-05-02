@@ -1,9 +1,0 @@
-[
-  {
-    "name": "GCC 10.2.1 x86_64-linux-gnu",
-    "compilers": {
-      "C": "/usr/bin/gcc",
-      "CXX": "/usr/bin/g++"
-    }
-  }
-]

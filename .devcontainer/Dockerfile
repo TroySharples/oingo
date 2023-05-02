@@ -1,9 +1,8 @@
 FROM debian:latest
 
 # Install packages
-RUN apt update -y && apt upgrade -y \
-    && apt install -y sudo build-essential cmake git clang gdb imagemagick \
-    && rm -rf /var/lib/apt/lists/*
+RUN DEBIAN_FRONTEND=noninteractive apt update -qq && apt upgrade -yqq \
+    && apt install -yqq sudo build-essential cmake git ninja-build clang clang-tidy clang-format imagemagick
 
 # Add non-root user
 ARG USERNAME

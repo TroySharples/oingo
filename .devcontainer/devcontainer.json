@@ -21,12 +21,12 @@
 				"cschlosser.doxdocgen",
 				"GitHub.vscode-pull-request-github",
 				"DavidAnson.vscode-markdownlint",
-				"ms-vscode.makefile-tools",
 				"ngtystr.ppm-pgm-viewer-for-vscode",
 				"ms-vscode.hexeditor",
 				"SanaAjani.taskrunnercode",
-				"streetsidesoftware.code-spell-checker",
-				"mhutchie.git-graph"
+				"mhutchie.git-graph",
+				"GitHub.copilot",
+				"GitHub.copilot-labs"
 			]
 		}
 	}
