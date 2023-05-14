@@ -8,7 +8,8 @@
         "program": "${workspaceFolder}/build/apps/ray-tracer",
         "args": [ "-f", "png", "-o", "renders/spheres.png", "-r", "1920x1080", "-s", "sphere" ],
         "environment": [{ "name": "config", "value": "Debug" }],
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}",
+        "preLaunchTask": "CMake: build debug"
       }
     ]
 }

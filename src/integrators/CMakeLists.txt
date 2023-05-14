@@ -1,4 +1,3 @@
-add_library(oingo-integrators STATIC simple_sampler.cpp simple_sampler.hpp integrator.hpp)
+add_library(oingo-integrators STATIC simple_sampler.cpp)
 target_include_directories(oingo-integrators PRIVATE ${PROJECT_SOURCE_DIR}/src/integrators)
-target_link_libraries(oingo-integrators PUBLIC Oingo::Scene Oingo::PPM)
-add_library(Oingo::Integrators ALIAS oingo-integrators)
+target_link_libraries(oingo-integrators PUBLIC oingo-scene oingo-ppm)

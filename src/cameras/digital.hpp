@@ -2,14 +2,14 @@
 
 #include "camera.hpp"
 
-namespace oingo::cameras
+namespace cameras
 {
     
 class digital : public camera
 {
 public:
     spacial_t position { 0, 0, 0 };
-    floating_point_t fov = 1;
+    double fov = 1;
     
     ray_t generate_ray(const film& f, std::size_t hori, std::size_t vert) override;
 

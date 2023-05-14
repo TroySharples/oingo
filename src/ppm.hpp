@@ -5,9 +5,6 @@
 #include <filesystem>
 #include <iostream>
 
-namespace oingo
-{
-
 /**
  * @brief Converts a PPM to PNG
  * The way it does this at the moment is hacky and required Linux system calls - a much nicer way of doing this would be to use libpng.
@@ -30,6 +27,4 @@ template <typename T>
 std::ostream& ppm_write_pixel(std::ostream& os, const rgb_t<T>& pixel)
 {
     return os << pixel << '\n';
-}
-
 }

@@ -2,7 +2,7 @@
 
 #include "ppm.hpp"
 
-namespace oingo::integrator
+namespace integrator
 {
 
 static colour_t trace_ray(const scene::scene& s, const ray_t& ray)

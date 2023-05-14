@@ -3,7 +3,7 @@
 #include "disk.hpp"
 #include "tube.hpp"
 
-namespace oingo::shapes
+namespace shapes
 {
 
 bool cylinder::hit(const ray_t& ray) const

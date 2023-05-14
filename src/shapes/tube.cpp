@@ -1,6 +1,6 @@
 #include "tube.hpp"
 
-namespace oingo::shapes
+namespace shapes
 {
 
 bool tube::hit(const ray_t& ray) const
@@ -13,31 +13,32 @@ bool tube::hit(const ray_t& ray) const
 bool tube::hit(const ray_t& ray, intersection& intersec) const
 {
     // Return false if the rays are vertical
-    if (std::abs(ray.direction[0]) < ϵ && std::abs(ray.direction[0]) < ϵ)
+    constexpr auto epsilon = std::numeric_limits<double>::epsilon();
+    if (std::abs(ray.direction[0]) < epsilon && std::abs(ray.direction[0]) < epsilon)
         return false;
 
     // Returns false if there is no solution to x^2 + y^2 = 1
     const auto a = std::pow(ray.direction[0], 2) + std::pow(ray.direction[1], 2);
     const auto b = 2 * (ray.origin[0] * ray.direction[0] + ray.origin[1] * ray.direction[1]);
     const auto c = std::pow(ray.origin[0], 2) + std::pow(ray.origin[1], 2) - 1;
-    const auto Δ = std::pow(b, 2) - 4*a*c;
+    const auto d = std::pow(b, 2) - 4*a*c;
 
-    if (Δ < ϵ)
+    if (d < epsilon)
         return false;
     
     // Makes sure the intersection isn't behind the rays origin - we do this without computing the expensive square-root of Δ
-    if (b > 0 && std::pow(b, 2) > Δ)
+    if (b > 0 && std::pow(b, 2) > d)
         return false;
         
     // Compute the hitting points - this is inevitable at this stage 
     const auto tainv = 1 / (2 * a);
-    const auto δ = std::sqrt(Δ), α = (-b - δ) * tainv, β = (-b + δ) * tainv;
-    const auto p = ray[α], q = ray[β];
+    const auto r = std::sqrt(d), x = (-b - r) * tainv, y = (-b + r) * tainv;
+    const auto p = ray[x], q = ray[y];
 
     // We are potentially hitting the outside of the tube
-    if (α > 0 && -1 < p[2] && p[2] < 1)
+    if (x > 0 && -1 < p[2] && p[2] < 1)
     {
-        intersec.t = α;
+        intersec.t = x;
         intersec.n = { p[0], p[1], 0 };
         return true;
     }
@@ -45,7 +46,7 @@ bool tube::hit(const ray_t& ray, intersection& intersec) const
     // We are hitting the inside of the tube
     if (-1 < q[2] && q[2] < 1)
     {
-        intersec.t = β;
+        intersec.t = y;
         intersec.n = { -q[0], -q[1], 0 };
         return true;
     }

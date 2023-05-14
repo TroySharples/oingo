@@ -2,7 +2,7 @@
 
 #include "vector.hpp"
 
-namespace oingo::math
+namespace math
 {
 
 template <typename T, std::size_t S>

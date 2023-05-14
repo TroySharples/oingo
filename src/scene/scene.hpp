@@ -7,7 +7,7 @@
 
 #include <vector>
 
-namespace oingo::scene
+namespace scene
 {
 
 struct scene

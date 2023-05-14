@@ -2,15 +2,16 @@
 
 #include <concepts>
 
-namespace oingo::math
+namespace math
 {
 
 template <typename T>
-requires std::unsigned<T>
+requires std::unsigned_integral<T>
 constexpr auto pow(const auto& a, const T& b)
 {
     decltype(a) ret = 1;
-    for (size_t i = 0; i < b; i++) ret *= a;
+    for (std::size_t i = 0; i < b; i++)
+        ret *= a;
     return ret;
 }
 

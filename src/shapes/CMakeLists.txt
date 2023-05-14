@@ -1,4 +1,3 @@
-add_library(oingo-shapes STATIC sphere.cpp sphere.hpp shape.hpp cylinder.cpp cylinder.hpp tube.cpp tube.hpp disk.cpp disk.hpp)
+add_library(oingo-shapes STATIC sphere.cpp cylinder.cpp tube.cpp disk.cpp)
 target_include_directories(oingo-shapes PRIVATE ${PROJECT_SOURCE_DIR}/src/shapes)
-target_link_libraries(oingo-shapes PUBLIC Oingo::Common)
-add_library(Oingo::Shapes ALIAS oingo-shapes)
+target_link_libraries(oingo-shapes PUBLIC oingo-common)

@@ -7,8 +7,6 @@
 #include <fstream>
 #include <iostream>
 
-using namespace oingo;
-
 static std::filesystem::path make_tmp_name(const std::filesystem::path& path = { })
 {
     std::filesystem::path ret = path;

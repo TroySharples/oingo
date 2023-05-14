@@ -2,7 +2,7 @@
 
 #include "common.hpp"
 
-namespace oingo::lights
+namespace lights
 {
     struct ambient_light
     {

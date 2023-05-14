@@ -2,7 +2,7 @@
 
 #include "shape.hpp"
 
-namespace oingo::shapes
+namespace shapes
 {
 
 /**

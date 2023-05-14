@@ -4,9 +4,6 @@
 #include <cstddef>
 #include <filesystem>
 
-namespace oingo
-{
-
 namespace scene { struct scene; }
 
 struct options 
@@ -23,5 +20,3 @@ struct options
 };
 
 options parse_options(int argc, char** argv);
-
-}

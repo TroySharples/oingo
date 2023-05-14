@@ -1,6 +1,6 @@
 #include "film.hpp"
 
-namespace oingo::cameras
+namespace cameras
 {
 
 film::film(std::size_t hori, std::size_t vert)

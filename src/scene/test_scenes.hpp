@@ -2,7 +2,7 @@
 
 #include "scene.hpp"
 
-namespace oingo::scene
+namespace scene
 {
 
 extern const scene single_sphere;

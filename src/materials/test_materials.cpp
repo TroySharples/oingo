@@ -1,6 +1,6 @@
 #include "test_materials.hpp"
 
-namespace oingo::materials
+namespace materials
 {
 
     const material matt_white {

@@ -2,9 +2,8 @@
 
 #include "vector.hpp"
 #include "tensor.hpp"
-#include "floating_point.hpp"
 
-namespace oingo::math
+namespace math
 {
 
 template <typename T, std::size_t M, std::size_t N>
@@ -182,7 +181,7 @@ constexpr matrix<T, M, M> invert(const matrix<T, M, M>& A)
 {
     // Find the determinant of the matrix
     const auto det = determinant(A);
-    if (std::abs(det) < ϵ)
+    if (std::abs(det) < std::numeric_limits<double>::epsilon())
         throw std::runtime_error("Matrix is singular");
 
     // Find the matrix of cofactors
@@ -209,7 +208,7 @@ std::ostream& operator<<(std::ostream& os, const matrix<T, M, N>& A)
                 os << static_cast<int>(A(i, j)) << ' ';
             else
                 os << A(i, j) << ' ';
-            os << '\n';
+        os << '\n';
     }
     return os;
 }

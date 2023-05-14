@@ -4,25 +4,25 @@
 
 #include <optional>
 
-namespace oingo::materials
+namespace materials
 {
 
 struct material
 {
     // Emissivness
-    colour_t ke;
+    colour_t ke = { 0 };
     // Ambiance
-    colour_t ka;
+    colour_t ka = { 0 };
     // Spectrum
-    colour_t ks;
+    colour_t ks = { 0 };
     // Diffusivity 
-    colour_t kd;
+    colour_t kd = { 0 };
     // Transmissivness
-    colour_t kt;
+    colour_t kt = { 0 };
     // Reflectivity (defaults to ks)
-    std::optional<colour_t> kr;
-    float shininess;
-    float index;
+    std::optional<colour_t> kr = std::nullopt;
+    double shininess = 0;
+    double index = 0;
 };
 
 }

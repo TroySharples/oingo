@@ -2,7 +2,7 @@
 
 #include "integrator.hpp"
 
-namespace oingo::integrator
+namespace integrator
 {
 
 class simple_sampler : integrator

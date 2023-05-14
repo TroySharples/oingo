@@ -1,8 +1,5 @@
 #include <ostream>
 
-namespace oingo
-{
-
 enum class colour_code {
     FG_RED     = 31,
     FG_GREEN   = 32,
@@ -16,6 +13,4 @@ enum class colour_code {
 
 std::ostream& operator<<(std::ostream& os, const colour_code& code) {
     return os << "\033[" << static_cast<int>(code) << "m";
-}
-
 }

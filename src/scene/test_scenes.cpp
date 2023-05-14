@@ -5,7 +5,7 @@
 #include "cameras/digital.hpp"
 #include "materials/test_materials.hpp"
 
-namespace oingo::scene
+namespace scene
 {
 
 static scene make_single_sphere()
@@ -55,7 +55,7 @@ static scene make_cylinders()
         ret.objects.emplace_back(object({
             .shp   = back.shp->clone(),
             .pos   = back.pos + spacial_t({ 0, 3, 0 }),
-            .trans = back.trans * math::rotation<floating_point_t>(0.5, 0.5, 0.5),
+            .trans = back.trans * math::rotation<double>(0.5, 0.5, 0.5),
             .mat   = back.mat
         }));
     }

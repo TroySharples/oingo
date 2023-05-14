@@ -5,7 +5,7 @@
 #include <iostream>
 #include <concepts>
 
-namespace oingo::math
+namespace math
 {
 
 /**

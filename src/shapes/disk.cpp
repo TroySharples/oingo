@@ -1,6 +1,6 @@
 #include "disk.hpp"
 
-namespace oingo::shapes
+namespace shapes
 {
 
 bool disk::hit(const ray_t& ray) const
@@ -13,7 +13,8 @@ bool disk::hit(const ray_t& ray) const
 bool disk::hit(const ray_t& ray, intersection& intersec) const
 {
     // Returns false immediately if the ray doesn't even hit the z = 0 plane or we start inside it
-    if (std::abs(ray.origin[2]) < ϵ || std::abs(ray.direction[2]) < ϵ)
+    constexpr auto epsilon = std::numeric_limits<double>::epsilon();
+    if (std::abs(ray.origin[2]) < epsilon || std::abs(ray.direction[2]) < epsilon)
         return false;
 
     // Return if it was behind the origin

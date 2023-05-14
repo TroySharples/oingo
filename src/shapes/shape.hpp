@@ -4,7 +4,7 @@
 
 #include <memory>
 
-namespace oingo::shapes
+namespace shapes
 {
 
 struct shape
@@ -15,7 +15,7 @@ struct shape
 
     struct intersection
     {
-        floating_point_t t;
+        double t;
         spacial_t n;
     };
 

@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-namespace oingo::integrator
+namespace integrator
 {
 
 struct integrator

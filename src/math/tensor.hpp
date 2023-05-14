@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace oingo::math
+namespace math
 {
 
 template <typename T>

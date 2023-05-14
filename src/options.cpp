@@ -7,9 +7,6 @@
 
 #include <unistd.h>
 
-namespace oingo
-{
-
 options parse_options(int argc, char** argv)
 {
     options ret;
@@ -66,11 +63,8 @@ options parse_options(int argc, char** argv)
             }
             default:
                 throw std::runtime_error("Could not parse commandline options");   
-
         }
     }
 
     return ret;
-}
-
 }

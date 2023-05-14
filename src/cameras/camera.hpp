@@ -3,7 +3,7 @@
 #include "film.hpp"
 #include "common.hpp"
 
-namespace oingo::cameras
+namespace cameras
 {
 
 struct camera
