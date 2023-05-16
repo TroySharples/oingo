@@ -1,50 +1,85 @@
 #include "math/matrix.hpp"
 
-static bool calculate_inverse(const auto& A) try
+#include <gtest/gtest.h>
+
+#define ASSERT_MATRIX_NEAR(A,B) ASSERT_NEAR(math::norm((A) - (B)), 0, 100*std::numeric_limits<double>::epsilon())
+
+static const auto I = math::identity<double, 3>();
+
+static const math::matrix<double, 3, 3> A = {
+    1,  0, -3,
+    4, -8, 12,
+    3, 15,  0
+};
+
+static const math::matrix<double, 3, 3> B = {
+    1, 0, 0,
+    0, 5, 0,
+    0, 0, 5
+};
+
+static const math::matrix<double, 3, 3> C = {
+    0, -5,  0,
+    0,  6,  0,
+    0,  1, -5
+};
+
+static const auto NONSINGULAR_MATRICIES = { I, A, B };
+static const auto SINGULAR_MATRICIES    = { C };
+
+TEST(MatrixInverterTest, Identity)
 {
-    std::cout << "Trying to inverse matrix:\n" << A
-        << "Inverse:\n" << math::invert(A) << '\n';
-    return true;
+    const auto IINV = math::invert(I);
+
+    ASSERT_MATRIX_NEAR(I, IINV) << "The inverse of the identity matrix should be the identity matrix";
 }
-catch (const std::runtime_error& e)
+
+TEST(MatrixInverterTest, Singular)
 {
-    std::cout << "Failed to inverse - " << e.what() << "\n\n";
-    return false;
+    for (const auto& M : SINGULAR_MATRICIES)
+        ASSERT_THROW(math::invert(M), std::runtime_error) << "Singular matrix should throw an exception when trying to invert";
 }
 
-static bool calculate_mult(const auto& A, const auto& v)
+TEST(MatrixInverterTest, NonSingular)
 {
-    std::cout << "Multiplying A*v:\n"
-        << "A:\n" << A
-        << "v:\n" << v << '\n'
-        << "A*v:\n" << A * v << "\n\n";
-    return true;
-}
-
-int main()
-{
-    constexpr auto MAT0 = math::identity<double, 3>();
-    constexpr auto MAT1 = math::matrix<double, 3, 3>{
-        1,  0, -3,
-        4, -8, 12,
-        3, 15,  0
-    };
-    constexpr auto MAT2 = math::matrix<double, 3, 3>{
-        1, 0, 0,
-        0, 5, 0,
-        0, 0, 5
-    };
-
-    constexpr auto VEC0 = math::vector<double, 3>{ 1,  0, 0 };
-    constexpr auto VEC1 = math::vector<double, 3>{ 7, -4, 2 };
-    constexpr auto VEC2 = math::vector<double, 3>{ 1,  0, 3 };
-
-    for (const auto& A : { MAT0, MAT1, MAT2 })
+    for (const auto& M : NONSINGULAR_MATRICIES)
     {
-        calculate_inverse(A);
-        for (const auto& v : { VEC0, VEC1, VEC2 })
-            calculate_mult(A, v);
+        const auto MINV = math::invert(M);
+        const auto MMINV = M * MINV;
+        ASSERT_MATRIX_NEAR(MMINV, I) << "A matrix multiplied by its inverse should be the identity matrix";
     }
+}
 
-    return EXIT_SUCCESS;
+TEST(MatrixInverterTest, InvertInvert)
+{
+    for (const auto& M : NONSINGULAR_MATRICIES)
+    {
+        const auto MINV = math::invert(M);
+        const auto MINVINV = math::invert(MINV);
+
+        ASSERT_MATRIX_NEAR(M, MINVINV) << "The inverse of the inverse of a matrix should be the matrix itself";
+    }
+}
+
+TEST(MatrixDeterminantTest, Identity)
+{
+    ASSERT_EQ(math::determinant(I), 1) << "The determinant of the identity matrix should be 1";
+}
+
+TEST(MatrixDeterminantTest, Singular)
+{
+    for (const auto& M : SINGULAR_MATRICIES)
+        ASSERT_EQ(math::determinant(M), 0) << "The determinant of a singular matrix should be 0";
+}
+
+TEST(MatrixDeterminantTest, NonSingular)
+{
+    for (const auto& M : NONSINGULAR_MATRICIES)
+        ASSERT_NE(math::determinant(M), 0) << "The determinant of a non-singular matrix should not be 0";
+}
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

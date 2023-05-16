@@ -159,6 +159,31 @@ constexpr T determinant(const matrix<T, M, M>& A)
 }
 
 /**
+ * @brief Calculates the trace
+ */
+template <typename T, std::size_t M>
+constexpr T trace(const matrix<T, M, M>& A)
+{
+    T ret = 0;
+    for (std::size_t i = 0; i < M; i++)
+        ret += A(i, i);
+    return ret;
+}
+
+/**
+ * @brief Calculates the norm of the matrix
+ */
+template <typename T, std::size_t M, std::size_t N>
+constexpr T norm(const matrix<T, M, N>& A)
+{
+    T ret = 0;
+    for (std::size_t i = 0; i < M; i++)
+        for (std::size_t j = 0; j < N; j++)
+            ret += std::pow(A(i, j), 2);
+    return std::sqrt(ret);
+}
+
+/**
  * @brief Calculates the transpose
  */
 template <typename T, std::size_t M>
