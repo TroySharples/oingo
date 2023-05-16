@@ -57,8 +57,7 @@ options parse_options(int argc, char** argv)
             {
                 if (optopt == 'f' || optopt == 'r' || optopt == 'o')
                     throw std::runtime_error("Option requires an argument");
-                else
-                    throw std::runtime_error("Unknown option");
+                throw std::runtime_error("Unknown option");
                 break;
             }
             default:
