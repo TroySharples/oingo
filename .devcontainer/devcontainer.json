@@ -25,8 +25,8 @@
 				"ms-vscode.hexeditor",
 				"SanaAjani.taskrunnercode",
 				"mhutchie.git-graph",
-				"GitHub.copilot",
-				"GitHub.copilot-labs"
+				"GitHub.copilot-labs",
+				"GitHub.copilot-nightly"
 			]
 		}
 	}

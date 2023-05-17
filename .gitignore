@@ -250,3 +250,6 @@ build/
 
 # CMake build
 **/build
+
+# Test renders
+**/renders/*test*
