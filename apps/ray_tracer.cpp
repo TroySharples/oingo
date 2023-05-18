@@ -1,4 +1,5 @@
 #include "integrators/simple_sampler.hpp"
+#include "cameras/digital.hpp"
 #include "logging.hpp"
 #include "options.hpp"
 #include "ppm.hpp"
@@ -45,15 +46,17 @@ int main(int argc, char** argv) try
         throw std::runtime_error("We only support test scene rendering at this time");
     const scene::scene& s = *opt.test_scene;
 
-    // Load the film
-    cameras::film f(opt.horizontal_pixels, opt.vertical_pixels);
+    // Load the camera and film
+    auto c = std::make_unique<cameras::digital>();
+    c->fov = 1.5;
+    c->f = { opt.horizontal_pixels, opt.vertical_pixels };
 
     // Render the image to a temporary PPM file
     const auto ppm_file = make_tmp_name(opt.output_file);
     {
         std::ofstream os(ppm_file);
         integrator::simple_sampler r;   
-        r.render(s, f, os);
+        r.render(s, *c, os);
     }    
 
     // Converts to PNG format if necessary

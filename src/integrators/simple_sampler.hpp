@@ -8,7 +8,7 @@ namespace integrator
 class simple_sampler : integrator
 {
 public:
-    void render(const scene::scene& s, const cameras::film& f, std::ostream& os) override;
+    void render(const scene::scene& s, const cameras::camera& c, std::ostream& os) override;
 };
 
 }

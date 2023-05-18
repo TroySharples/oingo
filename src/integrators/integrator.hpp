@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scene/scene.hpp"
-#include "cameras/film.hpp"
+#include "cameras/camera.hpp"
 
 #include <iostream>
 
@@ -12,7 +12,7 @@ struct integrator
 {
     virtual ~integrator() = default;
 
-    virtual void render(const scene::scene& s, const cameras::film& f, std::ostream& os) = 0;
+    virtual void render(const scene::scene& s, const cameras::camera& c, std::ostream& os) = 0;
 };
 
 }

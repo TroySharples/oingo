@@ -90,13 +90,13 @@ static colour_t trace_ray(const scene::scene& s, const ray_t& ray)
     return ret;
 }
 
-void simple_sampler::render(const scene::scene& s, const cameras::film& f, std::ostream& os)
+void simple_sampler::render(const scene::scene& s, const cameras::camera& c, std::ostream& os)
 {
-    ppm_write_header(os, f.horizontal_pixels, f.vertical_pixels, std::numeric_limits<rgb8_t::value_type>::max());
+    ppm_write_header(os, c.f.horizontal_pixels, c.f.vertical_pixels, std::numeric_limits<rgb8_t::value_type>::max());
 
-    for (std::size_t j = 0; j < f.vertical_pixels; j++)
-        for (std::size_t i = 0; i < f.horizontal_pixels; i++)
-            ppm_write_pixel(os, to_rgb<std::uint8_t>(trace_ray(s, s.cam->generate_ray(f, i, j))));
+    for (std::size_t j = 0; j < c.f.vertical_pixels; j++)
+        for (std::size_t i = 0; i < c.f.horizontal_pixels; i++)
+            ppm_write_pixel(os, to_rgb<std::uint8_t>(trace_ray(s, c.generate_ray(i, j))));
 }
 
 }

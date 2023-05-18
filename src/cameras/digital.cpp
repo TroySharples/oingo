@@ -3,7 +3,7 @@
 namespace cameras
 {
 
-ray_t digital::generate_ray(const film& f, std::size_t hori, std::size_t vert)
+ray_t digital::generate_ray(std::size_t hori, std::size_t vert) const
 {
     if (hori >= f.horizontal_pixels || vert >= f.vertical_pixels)
         throw std::runtime_error("Invalid pixel positon");

@@ -13,7 +13,7 @@ struct pinhole : camera
     double    aspectratio;
     double    fov;
 
-    ray_t generate_ray(const film& f, std::size_t hori, std::size_t vert) override;
+    ray_t generate_ray(std::size_t hori, std::size_t vert) const override;
 };
 
 }

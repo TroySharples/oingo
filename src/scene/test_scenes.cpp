@@ -14,8 +14,6 @@ static scene make_single_sphere()
 
     // Camera
     auto cam = std::make_unique<cameras::digital>();
-    cam->fov = 1.5;
-    ret.cam = std::move(cam);
 
     // Object
     ret.objects.emplace_back(object{
@@ -40,8 +38,6 @@ static scene make_cylinders()
     scene ret;
 
     auto cam = std::make_unique<cameras::digital>();
-    cam->fov = 1.5;
-    ret.cam = std::move(cam);
 
     ret.objects.emplace_back(object{
         .shp = std::make_unique<shapes::cylinder>(),
