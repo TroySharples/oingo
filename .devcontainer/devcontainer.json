@@ -13,7 +13,6 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"slevesque.vscode-3dviewer",
 				"ms-vscode.cpptools",
 				"ms-vscode.cpptools-extension-pack",
 				"twxs.cmake",
@@ -23,10 +22,10 @@
 				"DavidAnson.vscode-markdownlint",
 				"ngtystr.ppm-pgm-viewer-for-vscode",
 				"ms-vscode.hexeditor",
-				"SanaAjani.taskrunnercode",
 				"mhutchie.git-graph",
 				"GitHub.copilot-labs",
-				"GitHub.copilot"
+				"GitHub.copilot",
+				"tatsy.vscode-3d-preview"
 			]
 		}
 	}
