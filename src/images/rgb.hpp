@@ -12,6 +12,16 @@ struct rgb
     float b;
 };
 
+struct rgb_view
+{
+    rgb_view() = default;
+    explicit rgb_view(rgb& rgb);
+
+    float& r;
+    float& g;
+    float& b;
+};
+
 constexpr rgb RED   { 1.0F, 0.0F, 0.0F };
 constexpr rgb GREEN { 0.0F, 1.0F, 0.0F };
 constexpr rgb BLUE  { 0.0F, 0.0F, 1.0F };
