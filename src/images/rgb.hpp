@@ -17,6 +17,8 @@ struct rgb_view
     rgb_view() = default;
     explicit rgb_view(rgb& rgb);
 
+    rgb_view& operator=(const rgb& rgb);
+
     float& r;
     float& g;
     float& b;

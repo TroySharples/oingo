@@ -1,92 +1,55 @@
-#include "integrators/simple_sampler.hpp"
-#include "cameras/digital.hpp"
-#include "logging.hpp"
-#include "options.hpp"
-#include "ppm.hpp"
+#include "integrators/whitted.hpp"
+#include "utils/logging.hpp"
+#include "assimp/scene.hpp"
+#include "embree/geometry.hpp"
+#include "images/pinhole.hpp"
 
-#include <chrono>
 #include <fstream>
 #include <iostream>
 
-static std::filesystem::path make_tmp_name(const std::filesystem::path& path = { })
-{
-    std::filesystem::path ret = path;
-
-    // Remove any extensions if necessary
-    if (ret.has_extension())
-        ret.replace_extension();
-
-    // Generate a unique filename from the current time if we weren't given one, and make the one we were given to an absolute path if we were
-    if (!ret.has_filename())
-        ret.replace_filename(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
-    else if (!ret.has_parent_path())
-        ret = std::filesystem::current_path() / ret;
-
-    // Prepend a temporary path if we still don't have a parent directory
-    if (!ret.has_parent_path())
-        ret = std::filesystem::temp_directory_path() / ret;
-
-    // Make this a hidden file by prepending "." to the file name if it isn't already hidden
-    if (std::string(ret.filename())[0] != '.')
-        ret.replace_filename(std::string(".") + std::string(ret.filename()));
-    
-    // Add the PPM extension
-    ret.replace_extension(".ppm");
-
-    return ret;
-}
+using namespace oingo;
 
 int main(int argc, char** argv) try
 {
-    // Parse options
-    options opt = parse_options(argc, argv);
-
-    // Load the test scene if necessary
-    if (opt.test_scene == nullptr)
-        throw std::runtime_error("We only support test scene rendering at this time");
-    const scene::scene& s = *opt.test_scene;
-
-    // Load the camera and film
-    auto c = std::make_unique<cameras::digital>();
-    c->fov = 1.5;
-    c->f = { opt.horizontal_pixels, opt.vertical_pixels };
-
-    // Render the image to a temporary PPM file
-    const auto ppm_file = make_tmp_name(opt.output_file);
+    // Parse object file
+    if (argc != 1)
     {
-        std::ofstream os(ppm_file);
-        integrator::simple_sampler r;   
-        r.render(s, *c, os);
-    }    
-
-    // Converts to PNG format if necessary
-    const auto formatted_file = (opt.format == options::format_t::ppm ? ppm_file : ppm_to_png(ppm_file)); 
-
-    if (!opt.output_file.has_filename())
-    {
-        // Output the PPM file to stdout and delete the temporary PNG
-        {
-            std::ifstream is(formatted_file);
-            std::cout << is.rdbuf();
-        }
-        std::remove(formatted_file.c_str());
+        std::cerr << "Usage: " << argv[0] << " <object file>\n";
+        return EXIT_FAILURE;
     }
-    else
+
+    // Load the object mesh
+    std::filesystem::path obj_path = "argv[1]";
+    assimp::scene assimp_scene(obj_path);
+
+    // Load an Embree device and scene
+    embree::device embree_device;
+    embree::scene embree_scene(embree_device);
+
+    // Add the mesh to the scene
     {
-        // We try an efficient filesystem rename. If this fails due to a filesystem error (e.g. the paths are on different
-        // filesystems) we try an old-fashioned copy-and-delete instead
-        try 
-        {
-            std::filesystem::rename(formatted_file, opt.output_file);
-        }
-        catch (const std::filesystem::filesystem_error& e)
-        {
-            std::filesystem::remove(opt.output_file);
-            std::filesystem::copy(formatted_file, opt.output_file);
-            if (!std::filesystem::remove(formatted_file))
-                throw std::runtime_error("Could not delete " + std::string(ppm_file));
-        }
+        embree::mesh geom(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0]);
+        rtcAttachGeometry(static_cast<RTCScene>(embree_scene), static_cast<RTCGeometry>(geom));
     }
+
+    // Make a scene to be rendered
+    integrator::whitted integrator;
+    {
+        integrator.cam = std::make_unique<camera::pinhole>(
+            Eigen::Vector3f{0, 0, 0}, Eigen::Vector3f{1, 0, 0}, Eigen::Vector3f{0, 1, 0}, 1
+        );
+
+        integrator.ambient_lights.emplace_back(0.5);
+
+        integrator.scene = &embree_scene;
+    }
+
+    // Make a 1920x1080 film with a single tile
+    film f(1920, 1080);
+    film::tile& t = static_cast<std::span<film::tile>>(f)[0];
+
+    // Render the scene
+    integrator.render(t);
 
     return EXIT_SUCCESS;
 }

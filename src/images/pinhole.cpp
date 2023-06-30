@@ -1,8 +1,10 @@
 #include "pinhole.hpp"
 
+#include <Eigen/Dense>
+
 #include <limits>
 
-namespace oingo
+namespace oingo::camera
 {
 
 pinhole::pinhole(Eigen::Vector3f pos, Eigen::Vector3f lookdir, Eigen::Vector3f updir, float fl)

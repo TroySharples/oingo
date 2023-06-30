@@ -12,6 +12,7 @@ class film
 {
 public:
     film(std::size_t film_width, std::size_t film_height, std::size_t tile_width, std::size_t tile_height);
+    film(std::size_t film_width, std::size_t film_height);
     
     const std::size_t width;
     const std::size_t height;
@@ -33,6 +34,10 @@ public:
         rgb_view operator[](std::size_t i);
         rgb_view operator()(std::size_t x, std::size_t y);
 
+        std::size_t get_width() const;
+        std::size_t get_height() const;
+        float get_aspect_ratio() const;
+
         std::size_t get_film_width()  const;
         std::size_t get_film_height() const;
         float get_film_aspect_ratio() const;
@@ -53,6 +58,7 @@ public:
     const rgb& operator()(std::size_t x, std::size_t y) const;
 
     explicit operator std::span<tile>();
+
 private:
     std::vector<tile> _tiles;
     std::vector<rgb>  _pixels;

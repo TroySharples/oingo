@@ -3,4 +3,4 @@ target_include_directories(oingo-images PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/.. PR
 target_compile_features(oingo-images PUBLIC cxx_std_20)
 find_package(Eigen3 3.3 REQUIRED)
 find_package (embree 3.0 REQUIRED)
-target_link_libraries(oingo-images PUBLIC embree Eigen3::Eigen)
+target_link_libraries(oingo-images PUBLIC embree Eigen3::Eigen tinyexr)

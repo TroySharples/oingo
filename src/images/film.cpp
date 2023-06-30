@@ -15,6 +15,12 @@ film::film(std::size_t film_width, std::size_t film_height, std::size_t tile_wid
 
 }
 
+film::film(std::size_t film_width, std::size_t film_height)
+    : film(film_width, film_height, film_width, film_height)
+{
+    
+}
+
 film::tile::tile(film& f, std::size_t x_min, std::size_t x_max, std::size_t y_min, std::size_t y_max)
     : x_min(x_min), x_max(x_max), y_min(y_min), y_max(y_max), _f(f) 
 {
@@ -30,6 +36,21 @@ rgb_view film::tile::operator[](std::size_t i)
 rgb_view film::tile::operator()(std::size_t x, std::size_t y)
 {
     return static_cast<rgb_view>(_f(x_min + x, y_min + y));
+}
+
+std::size_t film::tile::get_width() const
+{
+    return x_max - x_min;
+}
+
+std::size_t film::tile::get_height() const
+{
+    return y_max - y_min;
+}
+
+float film::tile::get_aspect_ratio() const
+{
+    return static_cast<float>(get_width()) / static_cast<float>(get_height());
 }
 
 std::size_t film::tile::get_film_width()  const

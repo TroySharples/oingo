@@ -1,0 +1,5 @@
+add_library(oingo-assimp STATIC scene.cpp)
+target_include_directories(oingo-assimp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/.. PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(oingo-assimp PUBLIC cxx_std_17)
+find_package(assimp CONFIG REQUIRED)
+target_link_libraries(oingo-assimp PUBLIC assimp)

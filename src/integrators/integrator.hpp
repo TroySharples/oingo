@@ -1,18 +1,28 @@
 #pragma once
 
-#include "scene/scene.hpp"
-#include "cameras/camera.hpp"
+#include "images/camera.hpp"
+#include "specular/lights.hpp"
+#include "embree/scene.hpp"
 
-#include <iostream>
+#include <vector>
+#include <memory>
 
-namespace integrator
+namespace oingo::integrator
 {
 
-struct integrator
+struct base
 {
-    virtual ~integrator() = default;
+    virtual ~base() = default;
+    
+    std::unique_ptr<camera::base> cam;
 
-    virtual void render(const scene::scene& s, const cameras::camera& c, std::ostream& os) = 0;
+    std::vector<lights::ambient> ambient_lights;
+    std::vector<lights::point> point_lights;
+    std::vector<lights::directional> directional_lights;
+    
+    embree::scene* scene;
+
+    virtual void render(film::tile& t) = 0;
 };
 
 }

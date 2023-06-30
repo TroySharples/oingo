@@ -4,10 +4,10 @@
 
 #include <Eigen/Core>
 
-namespace oingo
+namespace oingo::camera
 {
     
-struct pinhole : camera
+struct pinhole : base
 {
     pinhole(Eigen::Vector3f pos, Eigen::Vector3f lookdir, Eigen::Vector3f updir, float fl);
 
