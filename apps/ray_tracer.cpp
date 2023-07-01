@@ -2,6 +2,7 @@
 #include "utils/logging.hpp"
 #include "assimp/scene.hpp"
 #include "embree/geometry.hpp"
+#include "specular/material.hpp"
 #include "images/pinhole.hpp"
 #include "images/exr.hpp"
 
@@ -25,9 +26,13 @@ int main(int argc, char** argv) try
     embree::device embree_device;
     embree::scene embree_scene(embree_device);
 
+    // Create a white matte material to attach to our geometries
+    material mat = white_matte;
+
     // Add the mesh to the scene
     {
         embree::mesh geom(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], Eigen::Vector3f{10, 0, 0});
+        rtcSetGeometryUserData(geom, static_cast<void*>(&mat));
         rtcAttachGeometry(embree_scene, geom);
     }
     rtcCommitScene(embree_scene);
@@ -39,7 +44,15 @@ int main(int argc, char** argv) try
             Eigen::Vector3f{0, 0, 0}, Eigen::Vector3f{1, 0, 0}, Eigen::Vector3f{0, 1, 0}, 1
         );
 
-        integrator.ambient_lights.emplace_back(0.5);
+        integrator.ambient_lights.emplace_back(0.1);
+
+        integrator.directional_lights.emplace_back(lights::directional{
+            .col = 0.3, .dir = Eigen::Vector3f{0, 0, 1}
+        });
+        
+        integrator.point_lights.emplace_back(lights::point{
+            .col = 0.3, .pos = Eigen::Vector3f{0, 10, -2}
+        });
 
         integrator.scene = embree_scene;
     }
