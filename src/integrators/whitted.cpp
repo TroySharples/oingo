@@ -53,6 +53,9 @@ colour whitted::trace_ray(const RTCRay& ray)
 
     const material& mat = *static_cast<material*>(rtcGetGeometryUserData(geom));
     
+    // Add the emmissive contribution
+    ret += mat.ke;
+
     // Calculate the ambient light contributions
     for (const auto& light : ambient_lights)
         ret += mat.ka * light.col;
