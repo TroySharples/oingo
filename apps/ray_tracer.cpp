@@ -5,6 +5,7 @@
 #include "specular/material.hpp"
 #include "images/pinhole.hpp"
 #include "images/exr.hpp"
+#include "utils/eigen.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -19,21 +20,27 @@ int main(int argc, char** argv) try
     std::filesystem::path obj_path = argv[1];
     std::filesystem::path exr_path = argv[2];
 
-    // Load the object mesh
-    assimp::scene assimp_scene(obj_path);
-
     // Load an Embree device and scene
     embree::device embree_device;
     embree::scene embree_scene(embree_device);
 
     // Create a white matte material to attach to our geometries
-    material mat = white_matte;
+    material mat = white_gloss;
 
-    // Add the mesh to the scene
+    // Add the mesh to the scene twice
     {
-        embree::mesh geom(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], Eigen::Vector3f{10, 0, 0});
-        rtcSetGeometryUserData(geom, static_cast<void*>(&mat));
-        rtcAttachGeometry(embree_scene, geom);
+        // Load the object mesh
+        assimp::scene assimp_scene(obj_path);
+
+        // Mesh 0
+        embree::mesh geom0(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1, 5});
+        rtcSetGeometryUserData(geom0, static_cast<void*>(&mat));
+        rtcAttachGeometry(embree_scene, geom0);
+        
+        // Mesh 1
+        embree::mesh geom1(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 90, 0), Eigen::Vector3f{14, 1, -5});
+        rtcSetGeometryUserData(geom1, static_cast<void*>(&mat));
+        rtcAttachGeometry(embree_scene, geom1);
     }
     rtcCommitScene(embree_scene);
 
@@ -47,11 +54,14 @@ int main(int argc, char** argv) try
         integrator.ambient_lights.emplace_back(0.1);
 
         integrator.directional_lights.emplace_back(lights::directional{
-            .col = 0.3, .dir = Eigen::Vector3f{0, 0, 1}
+            .col = 0.1, .dir = Eigen::Vector3f{-10, 0, -1}.normalized()
+        });
+        integrator.directional_lights.emplace_back(lights::directional{
+            .col = 0.3, .dir = Eigen::Vector3f{1, 0, 5}.normalized()
         });
         
         integrator.point_lights.emplace_back(lights::point{
-            .col = 0.3, .pos = Eigen::Vector3f{0, 10, -2}
+            .col = 0.2, .pos = Eigen::Vector3f{15, 5, 0}
         });
 
         integrator.scene = embree_scene;

@@ -29,4 +29,16 @@ constexpr material white_matte
     .index = 0.0F
 };
 
+constexpr material white_gloss
+{
+    .ke = 0.0F,
+    .ka = 0.2F,
+    .ks = 0.9F,
+    .kd = 0.2F,
+    .kt = 0.0F,
+    .kr = 0.0F,
+    .shininess = 1.0F,
+    .index = 0.0F
+};
+
 }
