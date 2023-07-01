@@ -14,7 +14,7 @@ scene::scene(const std::filesystem::path& path)
     // Make sure we were able to load the scene properly
     if (_scene == nullptr)
         throw std::runtime_error(std::string("Unable to load scene from file") + path.string());
-    if (_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
+    if ((_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) != 0)
         throw std::runtime_error(std::string("Scene is incomplete") + path.string());
     if (_scene->mRootNode == nullptr)
         throw std::runtime_error(std::string("Scene has no root node") + path.string());

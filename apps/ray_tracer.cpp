@@ -3,6 +3,7 @@
 #include "assimp/scene.hpp"
 #include "embree/geometry.hpp"
 #include "images/pinhole.hpp"
+#include "images/exr.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -11,15 +12,13 @@ using namespace oingo;
 
 int main(int argc, char** argv) try
 {
-    // Parse object file
-    if (argc != 1)
-    {
-        std::cerr << "Usage: " << argv[0] << " <object file>\n";
-        return EXIT_FAILURE;
-    }
+    // Parse arguments
+    if (argc != 3)
+        throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input OBJ file> <output EXR file>");
+    std::filesystem::path obj_path = argv[1];
+    std::filesystem::path exr_path = argv[2];
 
     // Load the object mesh
-    std::filesystem::path obj_path = "argv[1]";
     assimp::scene assimp_scene(obj_path);
 
     // Load an Embree device and scene
@@ -28,9 +27,10 @@ int main(int argc, char** argv) try
 
     // Add the mesh to the scene
     {
-        embree::mesh geom(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0]);
-        rtcAttachGeometry(static_cast<RTCScene>(embree_scene), static_cast<RTCGeometry>(geom));
+        embree::mesh geom(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], Eigen::Vector3f{10, 0, 0});
+        rtcAttachGeometry(embree_scene, geom);
     }
+    rtcCommitScene(embree_scene);
 
     // Make a scene to be rendered
     integrator::whitted integrator;
@@ -41,7 +41,7 @@ int main(int argc, char** argv) try
 
         integrator.ambient_lights.emplace_back(0.5);
 
-        integrator.scene = &embree_scene;
+        integrator.scene = embree_scene;
     }
 
     // Make a 1920x1080 film with a single tile
@@ -50,6 +50,9 @@ int main(int argc, char** argv) try
 
     // Render the scene
     integrator.render(t);
+
+    // Write it to file
+    exr::write_to_file(exr_path, f);
 
     return EXIT_SUCCESS;
 }

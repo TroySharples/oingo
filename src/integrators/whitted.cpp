@@ -12,7 +12,24 @@ void whitted::render(film::tile& t)
 
 colour whitted::trace_ray(const RTCRay& ray)
 {
-    return 0;
+    // Make the intersect context
+    RTCIntersectContext context;
+    rtcInitIntersectContext(&context);
+    context.flags = RTC_INTERSECT_CONTEXT_FLAG_COHERENT;
+
+    // Make the ray and set the various options
+    RTCRayHit rayhit { .ray {ray} };
+    rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
+    
+    // Calculate if the ray hit any geometry in the scene
+    rtcIntersect1(scene, &context, &rayhit);
+
+    // Return black if it didn't hit anything
+    if (rayhit.hit.geomID == RTC_INVALID_GEOMETRY_ID)
+        return 0;
+
+    // Otherwise return white for now - we'll do this properly later
+    return 1;
 }
 
 }

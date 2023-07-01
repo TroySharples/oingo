@@ -6,7 +6,7 @@ namespace oingo::embree
 {
 
 scene::scene(device& dev)
-    : _scene(rtcNewScene(static_cast<RTCDevice>(dev)))
+    : _scene(rtcNewScene(dev))
 {
     if (_scene == nullptr)
         throw std::runtime_error("Could not create Embree scene");

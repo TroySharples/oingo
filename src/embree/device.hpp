@@ -18,7 +18,7 @@ public:
 
     ~device();
 
-    explicit operator RTCDevice() const noexcept { return _device; }
+    operator RTCDevice() const noexcept { return _device; }
 
 private:
     RTCDevice _device;

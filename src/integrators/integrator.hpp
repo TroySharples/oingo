@@ -2,7 +2,8 @@
 
 #include "images/camera.hpp"
 #include "specular/lights.hpp"
-#include "embree/scene.hpp"
+
+#include <embree3/rtcore.h>
 
 #include <vector>
 #include <memory>
@@ -20,7 +21,7 @@ struct base
     std::vector<lights::point> point_lights;
     std::vector<lights::directional> directional_lights;
     
-    embree::scene* scene;
+    RTCScene scene;
 
     virtual void render(film::tile& t) = 0;
 };

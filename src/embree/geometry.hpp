@@ -21,7 +21,7 @@ public:
 
     virtual ~geometry();
 
-    explicit operator RTCGeometry() const noexcept { return _geometry; }
+    operator RTCGeometry() const noexcept { return _geometry; }
 
 protected:
     RTCGeometry _geometry;
@@ -31,6 +31,13 @@ class mesh : public geometry
 {
 public:
     mesh(device& dev, const aiMesh& m, const Eigen::Matrix3f& transformation = Eigen::Matrix3f::Identity(), const Eigen::Vector3f& translation = { 0, 0 ,0 });
+    mesh(device& dev, const aiMesh& m, const Eigen::Vector3f& translation = { 0, 0 ,0 });
+};
+
+class sphere : public geometry
+{
+public:
+    sphere(device& dev, const Eigen::Vector3f& center, float radius);
 };
 
 }

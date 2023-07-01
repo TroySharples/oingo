@@ -18,7 +18,7 @@ public:
 
     ~scene();
 
-    explicit operator RTCScene() const noexcept { return _scene; }
+    operator RTCScene() const noexcept { return _scene; }
 
 private:
     RTCScene _scene;

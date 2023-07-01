@@ -36,8 +36,8 @@ RTCRay pinhole::generate_ray(const film::tile& t, std::size_t x, std::size_t y) 
     ret.tnear = std::numeric_limits<float>::epsilon();
     ret.tfar  = std::numeric_limits<float>::infinity();
 
-    // Set the Embree layer mask to -1 (i.e. no mask is applied)
-    ret.mask = -1;
+    // Set the Embree layer mask to all ones
+    ret.mask = std::numeric_limits<decltype(ret.mask)>::max();
 
     return ret;
 }

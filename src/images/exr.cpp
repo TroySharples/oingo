@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstring>
 
-namespace oingo
+namespace oingo::exr
 {
     
 void write_to_file(const std::filesystem::path& path, const film& f)
