@@ -1,4 +1,4 @@
-add_library(oingo-utils STATIC timer.cpp eigen.cpp)
+add_library(oingo-utils STATIC timer.cpp eigen.cpp depth_counter.cpp)
 target_include_directories(oingo-utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/.. PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(oingo-utils PUBLIC cxx_std_20)
 find_package(Eigen3 3.3 REQUIRED)
