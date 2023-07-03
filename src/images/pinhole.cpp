@@ -9,8 +9,8 @@
 namespace oingo::camera
 {
 
-pinhole::pinhole(Eigen::Vector3f pos, Eigen::Vector3f lookdir, Eigen::Vector3f updir, float fl)
-    : pos(std::move(pos)), lookdir(std::move(lookdir)), updir(std::move(updir)), rightdir(updir.cross(lookdir)), fl(fl)
+pinhole::pinhole(Eigen::Vector3f pos_, Eigen::Vector3f lookdir_, Eigen::Vector3f updir_, float fl_)
+    : pos(std::move(pos_)), lookdir(std::move(lookdir_)), updir(std::move(updir_)), rightdir(updir.cross(lookdir)), fl(fl_)
 {
     
 }

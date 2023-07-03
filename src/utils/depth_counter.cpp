@@ -21,7 +21,7 @@ depth_counter::incrementer::~incrementer()
 
 depth_counter::incrementer depth_counter::increment()
 {
-    return incrementer(*this);
+    return { *this };
 }
 
 }
