@@ -1,1 +1,1 @@
-add_test(NAME sphere COMMAND ray-tracer ${CMAKE_SOURCE_DIR}/objects/cow.obj ${CMAKE_SOURCE_DIR}/renders/test-cow.exr)
+add_test(NAME cow COMMAND ray-tracer ${CMAKE_SOURCE_DIR}/objects/cow.obj ${CMAKE_SOURCE_DIR}/renders/test-cow.exr)
