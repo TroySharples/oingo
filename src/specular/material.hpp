@@ -36,7 +36,7 @@ constexpr material white_gloss
     .ks = 0.9F,
     .kd = 0.2F,
     .kt = 0.0F,
-    .kr = 0.0F,
+    .kr = 0.9F,
     .shininess = 1.0F,
     .index = 0.0F
 };

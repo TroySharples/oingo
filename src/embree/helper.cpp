@@ -11,17 +11,17 @@ Eigen::Vector3f get_interpolated_normal(const RTCGeometry& geom, const RTCHit& h
     return ret;
 }
 
-RTCRay make_shadow_ray(const Eigen::Vector3f& hit_pos, const Eigen::Vector3f& light_dir, float distance_to_light)
+RTCRay make_ray(const Eigen::Vector3f& hit_pos, const Eigen::Vector3f& light_dir, float tnear, float tfar)
 {
     return RTCRay {
         .org_x = hit_pos.x(),
         .org_y = hit_pos.y(),
         .org_z = hit_pos.z(),
-        .tnear = 0.1F,
+        .tnear = tnear,
         .dir_x = light_dir.x(),
         .dir_y = light_dir.y(),
         .dir_z = light_dir.z(),
-        .tfar  = distance_to_light,
+        .tfar  = tfar,
         .mask  = std::numeric_limits<unsigned int>::max()
     };
 }

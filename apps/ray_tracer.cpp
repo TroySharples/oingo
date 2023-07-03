@@ -1,7 +1,7 @@
 #include "integrators/whitted.hpp"
 #include "utils/logging.hpp"
 #include "assimp/scene.hpp"
-#include "embree/geometry.hpp"
+#include "embree/mesh.hpp"
 #include "specular/material.hpp"
 #include "images/pinhole.hpp"
 #include "images/exr.hpp"
