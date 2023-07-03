@@ -1,7 +1,11 @@
 {
-    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "C_Cpp.intelliSenseEngine": "disabled",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-    "C_Cpp.default.cppStandard": "c++20",
     "cmake.configureOnOpen": true,
-    "cmake.useCMakePresets": "always"
+    "cmake.useCMakePresets": "always",
+    "clangd.arguments": ["-log=verbose", 
+                         "-pretty", 
+                         "--background-index", 
+                         "--compile-commands-dir=${workspaceFolder}/build/"],
+    "clangd.onConfigChanged": "restart"
 }

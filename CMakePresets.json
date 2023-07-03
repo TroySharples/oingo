@@ -4,11 +4,12 @@
         {
             "name": "default",
             "hidden": true,
-            "binaryDir": "${workspaceRoot}/build/${presetName}",
+            "binaryDir": "${workspaceRoot}/build/",
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             }
         },
         {

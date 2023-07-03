@@ -26,7 +26,8 @@
 				"GitHub.copilot-labs",
 				"GitHub.copilot",
 				"tatsy.vscode-3d-preview",
-				"mcrespo.veriv"
+				"mcrespo.veriv",
+				"llvm-vs-code-extensions.vscode-clangd"
 			]
 		}
 	}
