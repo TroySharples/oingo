@@ -1,6 +1,6 @@
 add_library(oingo-embree STATIC device.cpp scene.cpp geometry.cpp mesh.cpp plane.cpp helper.cpp)
 target_include_directories(oingo-embree PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/.. PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_features(oingo-embree PUBLIC cxx_std_17)
+target_compile_features(oingo-embree PUBLIC cxx_std_20)
 find_package(embree 3.0 REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(Eigen3 3.3 REQUIRED)
