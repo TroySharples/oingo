@@ -4,7 +4,7 @@ FROM debian:latest
 RUN DEBIAN_FRONTEND=noninteractive apt update -qq && apt upgrade -yqq \
     && apt install -yqq sudo build-essential cmake git ninja-build clang \
        clang-tidy clang-format gdb libgtest-dev imagemagick libembree-dev \
-       libassimp-dev libtinyexr-dev libeigen3-dev valgrind clangd
+       libassimp-dev libtinyexr-dev libeigen3-dev valgrind clangd-13
 
 # Add non-root user
 ARG USERNAME
