@@ -21,14 +21,14 @@ public:
     {
     private:
         tile(film& f, std::size_t x_min, std::size_t x_max, std::size_t y_min, std::size_t y_max);
-        tile(const tile&) = delete;
-        tile& operator=(const tile&) = delete;
 
         friend class film;
     
     public:
+        tile(const tile&) = delete;
+        tile& operator=(const tile&) = delete;
         tile(tile&&) = default;
-        tile& operator=(tile&&) = default;
+        tile& operator=(tile&&) = delete;
         ~tile() = default;
 
         rgb_view operator[](std::size_t i);
