@@ -1,1 +1,2 @@
-add_test(NAME cow COMMAND ray-tracer ${CMAKE_SOURCE_DIR}/objects/cow.obj ${CMAKE_SOURCE_DIR}/renders/test-cow.exr)
+add_test(NAME cow_d1 COMMAND ray-tracer -r 1920x1080 -d 1 -i ${CMAKE_SOURCE_DIR}/objects/cow.obj -o ${CMAKE_SOURCE_DIR}/renders/test-cow_d1.exr)
+add_test(NAME cow_d3 COMMAND ray-tracer -r 1920x1080 -d 3 -i ${CMAKE_SOURCE_DIR}/objects/cow.obj -o ${CMAKE_SOURCE_DIR}/renders/test-cow_d3.exr)

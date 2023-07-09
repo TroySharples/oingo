@@ -153,7 +153,7 @@ colour whitted::trace_ray(const RTCRay& ray)
     if (norm_dot_refl < 0)
         return ret;
     
-    if (counter.get_depth() < max_depth)
+    if (counter.get_depth() < depth)
         ret += mat.kr * trace_ray(embree::make_ray(hit_pos, refl_dir, calculate_tnear(norm_dot_refl)));
 
     return ret;

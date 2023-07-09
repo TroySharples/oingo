@@ -7,6 +7,7 @@
 #include "images/pinhole.hpp"
 #include "images/exr.hpp"
 #include "utils/eigen.hpp"
+#include "config/config.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -16,32 +17,32 @@ using namespace oingo;
 int main(int argc, char** argv) try
 {
     // Parse arguments
-    if (argc != 3)
-        throw std::runtime_error("Usage: " + std::string(argv[0]) + " <input OBJ file> <output EXR file>");
-    std::filesystem::path obj_path = argv[1];
-    std::filesystem::path exr_path = argv[2];
+    config cfg(argc, argv);
 
     // Load an Embree device and scene
     embree::device embree_device;
     embree::scene embree_scene(embree_device);
 
+    // Make a scene to be rendered
+    integrator::whitted integrator;
+    integrator.depth = cfg.depth;
+
     // Add the various geometries to the scene
-    std::vector<std::unique_ptr<embree::geometry>> geometries;
     {
         // Load the object mesh
-        assimp::scene assimp_scene(obj_path);
+        assimp::scene assimp_scene(cfg.input_file);
 
         // The two meshes are the same, but with different transformations  
-        geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1,  7}));
-        geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0,  90, 0), Eigen::Vector3f{14,  1, -3}));
+        integrator.geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1,  7}));
+        integrator.geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0,  90, 0), Eigen::Vector3f{14,  1, -3}));
 
         // The planes to visualise the lights
-        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{ 0,  1,  0}, Eigen::Vector3f{ 0, -6,  0 }));
-        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{-1,  0,  0}, Eigen::Vector3f{20,  0,  0 }));
-        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{ 0,  0,  1}, Eigen::Vector3f{0 ,  0, -12}));
+        integrator.geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{ 0,  1,  0}, Eigen::Vector3f{ 0, -6,  0 }));
+        integrator.geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{-1,  0,  0}, Eigen::Vector3f{20,  0,  0 }));
+        integrator.geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{ 0,  0,  1}, Eigen::Vector3f{0 ,  0, -12}));
 
         // Attach the geometries to the scene and give them a material
-        for (auto& i : geometries)
+        for (auto& i : integrator.geometries)
         {
             rtcAttachGeometry(embree_scene, *i);
             i->mat = white_gloss;
@@ -49,8 +50,7 @@ int main(int argc, char** argv) try
     }
     rtcCommitScene(embree_scene);
 
-    // Make a scene to be rendered
-    integrator::whitted integrator;
+    // Add the lights and camera to the scene
     {
         integrator.cam = std::make_unique<camera::pinhole>(
             Eigen::Vector3f{0, 0, 0}, Eigen::Vector3f{1, 0, 0}, Eigen::Vector3f{0, 1, 0}, 1
@@ -69,15 +69,15 @@ int main(int argc, char** argv) try
         integrator.scene = embree_scene;
     }
 
-    // Make a 1920x1080 film with a single tile
-    film f(1920, 1080);
+    // Make a film with a single tile
+    film f(cfg.horizontal_pixels, cfg.vertical_pixels);
     film::tile& t = static_cast<std::span<film::tile>>(f)[0];
 
     // Render the scene
     integrator.render(t);
 
     // Write it to file
-    exr::write_to_file(exr_path, f);
+    exr::write_to_file(cfg.output_file, f);
 
     return EXIT_SUCCESS;
 }

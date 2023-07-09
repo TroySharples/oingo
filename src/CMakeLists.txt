@@ -1,10 +1,7 @@
-add_library(oingo-config STATIC config.cpp)
-target_include_directories(oingo-config PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_features(oingo-config PUBLIC cxx_std_17)
-
 add_subdirectory(assimp)
 add_subdirectory(embree)
 add_subdirectory(images)
 add_subdirectory(integrators)
 add_subdirectory(specular)
 add_subdirectory(utils)
+add_subdirectory(config)

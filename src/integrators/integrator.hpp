@@ -2,6 +2,7 @@
 
 #include "images/camera.hpp"
 #include "specular/lights.hpp"
+#include "embree/geometry.hpp"
 
 #include <embree3/rtcore.h>
 
@@ -14,7 +15,13 @@ namespace oingo::integrator
 struct base
 {
     virtual ~base() = default;
-    
+
+    // Paremeters
+    std::size_t depth {1};
+
+    // Scene description
+    std::vector<std::unique_ptr<embree::geometry>> geometries;
+
     std::unique_ptr<camera::base> cam;
 
     std::vector<lights::ambient> ambient_lights;
@@ -23,6 +30,7 @@ struct base
     
     RTCScene scene;
 
+    // Polymorphic interface
     virtual void render(film::tile& t) = 0;
 };
 
