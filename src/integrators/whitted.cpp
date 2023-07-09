@@ -22,13 +22,14 @@ static colour phong_specular_shader(const material& mat, float refl_dot_light)
     return mat.ks * std::pow(std::max(0.0F, refl_dot_light), mat.shininess);
 }
 
-// Calculates the minimum distance the ray cast should work for to avoid self intersection. Note the scalar value
-// is arbitary - will experiment to see what looks good
-static float calculate_tnear(float norm_dot_dir)
+// The minimum distance to cast the next ray
+static constexpr float TNEAR = 0.5F;
+
+// Adjusts the distance we think we hit from what Embree tells us to avoid self-intersection
+static float adjust_tfar(float tfar)
 {
-    return 0.5F;
-    constexpr float tnear_scalar = 0.5F;
-    return tnear_scalar / norm_dot_dir;
+    static constexpr float EPSILON = 0.0F;
+    return tfar - EPSILON;
 }
 
 void whitted::render(film::tile& t)
@@ -71,12 +72,15 @@ colour whitted::trace_ray(const RTCRay& ray)
 
     const Eigen::Vector3f ray_dir  = Eigen::Vector3f{ rayhit.ray.dir_x, rayhit.ray.dir_y, rayhit.ray.dir_z };
     const Eigen::Vector3f cam_pos  = Eigen::Vector3f{ rayhit.ray.org_x, rayhit.ray.org_y, rayhit.ray.org_z };
-    const Eigen::Vector3f hit_pos  = cam_pos + rayhit.ray.tfar * ray_dir;
     const Eigen::Vector3f norm_dir = embree::get_interpolated_normal(geom, rayhit.hit);
-    const Eigen::Vector3f refl_dir = (ray_dir - 2 * ray_dir.dot(norm_dir) * norm_dir).normalized();
     
-    const float norm_dot_refl = norm_dir.dot(refl_dir); 
+    // We adjust our hit position to be slightly above the surface to prevent self-intersection
+    const float norm_dot_ray = norm_dir.dot(ray_dir);
+    const Eigen::Vector3f hit_pos = cam_pos + adjust_tfar(rayhit.ray.tfar) * ray_dir;
     
+    // Calculate the reflection direction
+    const Eigen::Vector3f refl_dir = (ray_dir - 2 * norm_dot_ray * norm_dir).normalized();
+
     // *************************************************************************************************************
     // LIGHTING
     // 
@@ -102,7 +106,7 @@ colour whitted::trace_ray(const RTCRay& ray)
             continue;
 
         // Cast the shadow ray
-        RTCRay shadow_ray = embree::make_ray(hit_pos, light.dir, calculate_tnear(norm_dot_light));
+        RTCRay shadow_ray = embree::make_ray(hit_pos, light.dir, TNEAR);
 
         RTCIntersectContext context_shadow;
         rtcInitIntersectContext(&context_shadow);
@@ -126,7 +130,7 @@ colour whitted::trace_ray(const RTCRay& ray)
             continue;
 
         // Cast the shadow ray
-        RTCRay shadow_ray = embree::make_ray(hit_pos, light_dir, calculate_tnear(norm_dot_light), tfar);
+        RTCRay shadow_ray = embree::make_ray(hit_pos, light_dir, TNEAR, tfar);
 
         RTCIntersectContext context_shadow;
         rtcInitIntersectContext(&context_shadow);
@@ -150,11 +154,11 @@ colour whitted::trace_ray(const RTCRay& ray)
     auto increment = counter.increment();
 
     // It may be the case that the reflected ray is slightly behind the material due to the normal interpolation
-    if (norm_dot_refl < 0)
+    if (norm_dot_ray > 0)
         return ret;
     
     if (counter.get_depth() < depth)
-        ret += mat.kr * trace_ray(embree::make_ray(hit_pos, refl_dir, calculate_tnear(norm_dot_refl)));
+        ret += mat.kr * trace_ray(embree::make_ray(hit_pos, refl_dir, TNEAR));
 
     return ret;
 }
