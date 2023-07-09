@@ -76,7 +76,6 @@ colour whitted::trace_ray(const RTCRay& ray)
     const Eigen::Vector3f refl_dir = (ray_dir - 2 * ray_dir.dot(norm_dir) * norm_dir).normalized();
     
     const float norm_dot_refl = norm_dir.dot(refl_dir); 
-
     
     // *************************************************************************************************************
     // LIGHTING

@@ -35,10 +35,9 @@ int main(int argc, char** argv) try
         geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1, 5}));
         geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 90, 0), Eigen::Vector3f{14, 1, -5}));
 
-        // Mesh 0
-        embree::mesh geom0(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1, 5});
-        rtcSetGeometryUserData(geom0, static_cast<void*>(&mat));
-        rtcAttachGeometry(embree_scene, geom0);
+        // The planes to visualise the lights
+        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{0, 1, 0}, 0));
+        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{0, 0, 1}, 0));
 
         // Attach the geometries to the scene and give them a material
         for (auto& i : geometries)

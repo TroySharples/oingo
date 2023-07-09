@@ -29,7 +29,6 @@ mesh::mesh(device& dev, const aiMesh& m, const Eigen::Matrix3f& transformation, 
         normal_buffer[i] = normal_transformation * Eigen::Vector3f(m.mNormals[i].x, m.mNormals[i].y, m.mNormals[i].z);
 
     // Commit the geometry - there's more we can do here (e.g. load texture coordinates, setup BVH), but this is enough for now
-    rtcSetGeometryBuildQuality(_geometry, RTC_BUILD_QUALITY_LOW);
     rtcCommitGeometry(_geometry);
 }
 
