@@ -2,6 +2,7 @@
 #include "utils/logging.hpp"
 #include "assimp/scene.hpp"
 #include "embree/mesh.hpp"
+#include "embree/plane.hpp"
 #include "specular/material.hpp"
 #include "images/pinhole.hpp"
 #include "images/exr.hpp"
@@ -24,23 +25,27 @@ int main(int argc, char** argv) try
     embree::device embree_device;
     embree::scene embree_scene(embree_device);
 
-    // Create a white matte material to attach to our geometries
-    material mat = white_gloss;
-
-    // Add the mesh to the scene twice
+    // Add the various geometries to the scene
+    std::vector<std::unique_ptr<embree::geometry>> geometries;
     {
         // Load the object mesh
         assimp::scene assimp_scene(obj_path);
+
+        // The two meshes are the same, but with different transformations  
+        geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1, 5}));
+        geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 90, 0), Eigen::Vector3f{14, 1, -5}));
 
         // Mesh 0
         embree::mesh geom0(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1, 5});
         rtcSetGeometryUserData(geom0, static_cast<void*>(&mat));
         rtcAttachGeometry(embree_scene, geom0);
-        
-        // Mesh 1
-        embree::mesh geom1(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 90, 0), Eigen::Vector3f{14, 1, -5});
-        rtcSetGeometryUserData(geom1, static_cast<void*>(&mat));
-        rtcAttachGeometry(embree_scene, geom1);
+
+        // Attach the geometries to the scene and give them a material
+        for (auto& i : geometries)
+        {
+            rtcAttachGeometry(embree_scene, *i);
+            i->mat = white_gloss;
+        }
     }
     rtcCommitScene(embree_scene);
 

@@ -2,6 +2,8 @@
 
 #include "scene.hpp"
 
+#include "specular/material.hpp"
+
 namespace oingo::embree
 {
 
@@ -19,6 +21,8 @@ public:
     virtual ~geometry();
 
     operator RTCGeometry() const noexcept { return _geometry; }
+
+    material mat;
 
 protected:
     RTCGeometry _geometry;

@@ -1,8 +1,10 @@
 #include "whitted.hpp"
 
+#include "embree/geometry.hpp"
 #include "specular/material.hpp"
 #include "embree/helper.hpp"
 #include "utils/depth_counter.hpp"
+#include <embree3/rtcore_geometry.h>
 
 namespace oingo::integrator
 {
@@ -64,7 +66,8 @@ colour whitted::trace_ray(const RTCRay& ray)
     if (rayhit.hit.geomID == RTC_INVALID_GEOMETRY_ID)
         return ret;
 
-    const RTCGeometry geom = rtcGetGeometry(scene, rayhit.hit.geomID);
+    const embree::geometry& geom = *static_cast<const embree::geometry*>(rtcGetGeometryUserData(rtcGetGeometry(scene, rayhit.hit.geomID)));
+    const material& mat = geom.mat;
 
     const Eigen::Vector3f ray_dir  = Eigen::Vector3f{ rayhit.ray.dir_x, rayhit.ray.dir_y, rayhit.ray.dir_z };
     const Eigen::Vector3f cam_pos  = Eigen::Vector3f{ rayhit.ray.org_x, rayhit.ray.org_y, rayhit.ray.org_z };
@@ -74,7 +77,6 @@ colour whitted::trace_ray(const RTCRay& ray)
     
     const float norm_dot_refl = norm_dir.dot(refl_dir); 
 
-    const material& mat = *static_cast<material*>(rtcGetGeometryUserData(geom));
     
     // *************************************************************************************************************
     // LIGHTING
