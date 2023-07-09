@@ -32,12 +32,13 @@ int main(int argc, char** argv) try
         assimp::scene assimp_scene(obj_path);
 
         // The two meshes are the same, but with different transformations  
-        geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1, 5}));
-        geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 90, 0), Eigen::Vector3f{14, 1, -5}));
+        geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0, 120, 0), Eigen::Vector3f{14, -1,  7}));
+        geometries.emplace_back(std::make_unique<embree::mesh>(embree_device, *static_cast<const aiScene*>(assimp_scene)->mMeshes[0], eigen::make_rotation(0,  90, 0), Eigen::Vector3f{14,  1, -3}));
 
         // The planes to visualise the lights
-        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{0, 1, 0}, 0));
-        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{0, 0, 1}, 0));
+        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{ 0,  1,  0}, Eigen::Vector3f{ 0, -6,  0 }));
+        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{-1,  0,  0}, Eigen::Vector3f{20,  0,  0 }));
+        geometries.emplace_back(std::make_unique<embree::plane>(embree_device, Eigen::Vector3f{ 0,  0,  1}, Eigen::Vector3f{0 ,  0, -12}));
 
         // Attach the geometries to the scene and give them a material
         for (auto& i : geometries)
@@ -58,10 +59,7 @@ int main(int argc, char** argv) try
         integrator.ambient_lights.emplace_back(0.1);
 
         integrator.directional_lights.emplace_back(lights::directional{
-            .col = 0.1, .dir = Eigen::Vector3f{-10, 0, -1}.normalized()
-        });
-        integrator.directional_lights.emplace_back(lights::directional{
-            .col = 0.3, .dir = Eigen::Vector3f{1, 0, 5}.normalized()
+            .col = 0.1, .dir = Eigen::Vector3f{-1, 0, 1}.normalized()
         });
         
         integrator.point_lights.emplace_back(lights::point{

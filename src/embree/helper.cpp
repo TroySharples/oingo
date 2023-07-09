@@ -3,6 +3,11 @@
 namespace oingo::embree
 {
 
+Eigen::Vector3f get_hit_normal(const RTCHit& hit)
+{
+    return {hit.Ng_x, hit.Ng_y, hit.Ng_z};
+}
+
 Eigen::Vector3f get_interpolated_normal(const RTCGeometry& geom, const RTCHit& hit)
 {
     Eigen::Vector3f ret;

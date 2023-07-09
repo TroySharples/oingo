@@ -3,7 +3,6 @@
 #include "geometry.hpp"
 
 #include "Eigen/Core"
-#include <Eigen/src/Core/Matrix.h>
 
 namespace oingo::embree
 {
@@ -11,10 +10,7 @@ namespace oingo::embree
 class plane : public geometry
 {
 public:
-    plane(device& dev, Eigen::Vector3f norm, float l);
-
-    const Eigen::Vector3f norm;
-    const float l;
+    plane(device& dev, const Eigen::Vector3f& norm, const Eigen::Vector3f& p, float size = 100000.0F);
 };
 
 }
