@@ -26,7 +26,8 @@
 				"GitHub.copilot",
 				"tatsy.vscode-3d-preview",
 				"mcrespo.veriv",
-				"llvm-vs-code-extensions.vscode-clangd"
+				"llvm-vs-code-extensions.vscode-clangd",
+				"augustocdias.tasks-shell-input"
 			]
 		}
 	}

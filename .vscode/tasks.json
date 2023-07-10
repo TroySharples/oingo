@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Convert to PNG",
+            "type": "shell",
+            "command": "convert",
+            "args": [
+                "${input:path_exr}",
+                "${workspaceFolder}/renders/${input:path_png}"
+            ],
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "path_exr",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "ls ${workspaceFolder}/renders/*.exr"
+            }
+        },
+        {
+            "id": "path_png",
+            "type": "promptString",
+            "description": "Path to output PNG relative to ${workspaceFolder}/renders/",
+            }
+        }
+    ]
+}
