@@ -16,9 +16,14 @@ struct config
 
     std::size_t horizontal_pixels {1920};
     std::size_t vertical_pixels   {1080};
-    std::size_t depth             {1};
 
-    bool help = false;
+    std::size_t tile_width  {32};
+    std::size_t tile_height {32};
+
+    std::size_t depth        {1};
+    std::size_t thread_count {1};
+
+    bool help {false};
 };
 
 }

@@ -8,6 +8,7 @@
 #include "images/exr.hpp"
 #include "utils/eigen.hpp"
 #include "config/config.hpp"
+#include "utils/thread_pool.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -69,12 +70,15 @@ int main(int argc, char** argv) try
         integrator.scene = embree_scene;
     }
 
-    // Make a film with a single tile
-    film f(cfg.horizontal_pixels, cfg.vertical_pixels);
-    film::tile& t = static_cast<std::span<film::tile>>(f)[0];
+    // Make a film
+    film f(cfg.horizontal_pixels, cfg.vertical_pixels, cfg.tile_width, cfg.tile_height);
 
-    // Render the scene
-    integrator.render(t);
+    // Render the scene with a thread pool - we have to block on the destructor so we don't write the file before the render is done
+    {
+        thread_pool pool(cfg.thread_count);
+        for (auto& t : static_cast<std::span<film::tile>>(f))
+            pool.enqueue([&integrator, &t] { integrator.render(t); });
+    }
 
     // Write it to file
     exr::write_to_file(cfg.output_file, f);
