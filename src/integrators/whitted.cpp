@@ -148,16 +148,18 @@ colour whitted::trace_ray(const RTCRay& ray)
     // maximum depth. We use the embree::make_ray function to make the ray, and then recursively call this function
     // again to calculate the colour of the reflected ray. We then add the colour of the reflected ray to the
     // current colour.
+    //
+    // Before we calculate the reflected ray, we need to check a few things:
+    // 1. The depth of the recursion is less than the maximum depth.
+    // 2. The ray is facing away from the surface (this may not actually be the case because we are interpolating
+    //    normals).
+    // 3. The material has a non-black reflection coefficient.
     // *************************************************************************************************************
 
     static thread_local depth_counter counter;
     auto increment = counter.increment();
 
-    // It may be the case that the reflected ray is slightly behind the material due to the normal interpolation
-    if (norm_dot_ray > 0)
-        return ret;
-    
-    if (counter.get_depth() < depth)
+    if (norm_dot_ray < 0 && counter.get_depth() < depth && mat.kr != colours::black)
         ret += mat.kr * trace_ray(embree::make_ray(hit_pos, refl_dir, TNEAR));
 
     return ret;
