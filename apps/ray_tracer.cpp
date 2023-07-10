@@ -45,7 +45,7 @@ int main(int argc, char** argv) try
         for (auto& i : integrator.geometries)
         {
             rtcAttachGeometry(embree_scene, *i);
-            i->mat = white_gloss;
+            i->mat = materials::white_gloss;
         }
     }
     rtcCommitScene(embree_scene);
