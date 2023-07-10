@@ -25,7 +25,6 @@
             "id": "path_png",
             "type": "promptString",
             "description": "Path to output PNG relative to ${workspaceFolder}/renders/",
-            }
         }
     ]
 }
