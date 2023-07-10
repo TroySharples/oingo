@@ -4,6 +4,8 @@
 
 #include "specular/material.hpp"
 
+#include "Eigen/Core"
+
 namespace oingo::embree
 {
 
@@ -23,6 +25,9 @@ public:
     operator RTCGeometry() const noexcept { return _geometry; }
 
     material mat;
+
+    // Override this to modify the normal of the hit (e.g. for interpolation)
+    virtual Eigen::Vector3f get_normal(const RTCHit& hit) const;
 
 protected:
     RTCGeometry _geometry;

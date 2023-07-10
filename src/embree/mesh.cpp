@@ -38,4 +38,12 @@ mesh::mesh(device& dev, const aiMesh& m, const Eigen::Vector3f& translation)
     
 }
 
+Eigen::Vector3f mesh::get_normal(const RTCHit &hit) const
+{
+    Eigen::Vector3f ret;
+    rtcInterpolate0(_geometry, hit.primID, hit.u, hit.v, RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE, 0, ret.data(), ret.size());
+    ret.normalize();
+    return ret;
+}
+
 }

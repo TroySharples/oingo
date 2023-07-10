@@ -2,8 +2,6 @@
 
 #include "geometry.hpp"
 
-#include "Eigen/Core"
-
 namespace oingo::embree
 {
 

@@ -72,7 +72,7 @@ colour whitted::trace_ray(const RTCRay& ray)
 
     const Eigen::Vector3f ray_dir  = Eigen::Vector3f{ rayhit.ray.dir_x, rayhit.ray.dir_y, rayhit.ray.dir_z };
     const Eigen::Vector3f cam_pos  = Eigen::Vector3f{ rayhit.ray.org_x, rayhit.ray.org_y, rayhit.ray.org_z };
-    const Eigen::Vector3f norm_dir = embree::get_interpolated_normal(geom, rayhit.hit);
+    const Eigen::Vector3f norm_dir = geom.get_normal(rayhit.hit);
     
     // We adjust our hit position to be slightly above the surface to prevent self-intersection
     const float norm_dot_ray = norm_dir.dot(ray_dir);

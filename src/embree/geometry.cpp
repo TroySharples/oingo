@@ -42,4 +42,9 @@ geometry::~geometry()
         rtcReleaseGeometry(_geometry);
 }
 
+Eigen::Vector3f geometry::get_normal(const RTCHit& hit) const
+{
+    return Eigen::Vector3f({hit.Ng_x, hit.Ng_y, hit.Ng_z}).normalized();
+}
+
 }
