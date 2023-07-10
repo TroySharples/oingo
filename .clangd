@@ -4,6 +4,6 @@ Diagnostics:
     Remove: [ bugprone-easily-swappable-parameters, cppcoreguidelines-avoid-magic-numbers, cppcoreguidelines-init-variables, modernize-use-nodiscard,
                 cppcoreguidelines-pro-type-member-init, modernize-use-trailing-return-type, readability-braces-around-statements, readability-magic-numbers, 
                 readability-isolate-declaration, cppcoreguidelines-pro-bounds-constant-array-index, cppcoreguidelines-pro-type-reinterpret-cast,
-                cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-non-private-member-variables-in-classes]
+                cppcoreguidelines-pro-bounds-pointer-arithmetic, cppcoreguidelines-non-private-member-variables-in-classes, readability-redundant-access-specifiers ]
     CheckOptions:
       cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor: true
